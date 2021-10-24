@@ -1,0 +1,107 @@
+.header {
+    height: var(--header-height);
+    background-color: var(--white-color);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.header-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1365px;
+    margin: 0 auto;
+}
+
+.header-left {
+    padding: 8px 16px;
+    display: flex;
+    background-color: var(--white-color);
+    height: var(--header-height);
+    position: relative;
+}
+.header-left__logo {
+    color: var(--text-color);
+    margin-right: 8px;
+    align-self: center;
+}
+
+.header-left__icon-logo {
+    border-radius: 50%;
+    background: #fff;
+    font-size: 4rem;
+    color: var(--primary-color);
+}
+
+.header-left__icon-logo:hover {
+    filter: brightness(95%);
+    cursor: pointer;
+}
+.header-left__search {
+    display: flex;
+    align-items: center;
+    border-radius: 20px;
+    background-color: var(--bg-color);
+    height: 40px;
+    width: 240px;
+    overflow: hidden;
+    cursor: pointer;
+}
+.header-left__search-input {
+    height: 38px;
+    border-radius: 50px;
+    outline: none;
+    border: none;
+    font-size: 1.7rem;
+    color: var(--gray-color);
+    background-color: var(--bg-color);
+    width: 100%;
+    padding-left: 2px;
+    padding-right: 20px;
+}
+.header-left__search-input::placeholder {
+    font-size: 1.5rem;
+}
+.header-left__search-icon {
+    font-size: 1.6rem;
+    padding: 0 10px;
+    color: var(--text-color);
+}
+
+
+.header-right {
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+    list-style: none;
+}
+
+.header-right__item {
+	display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 20px;
+	font-size: 2rem;
+	color: var(--gray-color);
+}
+.header-right__item a {
+	color: var(--gray-color);
+	text-decoration: none;
+}
+.header-right__profile {
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    height: 34px;
+    border-radius: 50px;
+    margin-right: 8px;
+}
+.header-profile__img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+}
