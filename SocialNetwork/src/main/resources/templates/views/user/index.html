@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
 
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Facebook</title>
-	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="css/base.css">
-	<link rel="stylesheet" href="css/main.css">
-	<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.0.0-beta1/css/all.css" />
+	<link th:href="@{https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap}" rel="stylesheet"/>
+	<link rel="stylesheet" th:href="@{css/base.css}"/>
+	<link rel="stylesheet" th:href="@{css/main.css}"/>
+	<link rel="stylesheet" th:href="@{https://pro.fontawesome.com/releases/v6.0.0-beta1/css/all.css}" />
 </head>
 
 <body>
@@ -58,7 +59,7 @@
 
 						</li>
 						<li class="header-right__item">
-							<img src="img/profile.jpg" alt="" class="header-profile__img avt">
+							<img th:src="@{img/profile.jpg}" alt="" class="header-profile__img avt">
 						</li>
 					</ul>
 				</div>
@@ -68,15 +69,15 @@
 				<div class="container-left__favorite">
 						<ul class="favorite-list">
 							<li class="favorite-item nav-wall">
-								<img src="img/profile.jpg" alt="" class="avt favorite-item__img">
+								<img src="@{img/profile.jpg}" alt="" class="avt favorite-item__img">
 								<span class="favorite-item__text full-name">Hưng Dương</span>
 							</li>
 							<li class="favorite-item">
-								<img src="img/item-fav-1.png" alt="" class="favorite-item__img">
+								<img th:src="@{img/item-fav-1.png}" alt="" class="favorite-item__img">
 								<span class="favorite-item__text">Bạn bè</span>
 							</li>
 							<li class="favorite-item">
-								<img src="img/item-fav-3.png" alt="" class="favorite-item__img">
+								<img th:src="@{img/item-fav-3.png}" alt="" class="favorite-item__img">
 								<span class="favorite-item__text">Messenger</span>
 							</li>
 						</ul>
@@ -84,7 +85,7 @@
 				<div class="container-main">
 					<div class="container-posts">
 						<div class="posts__new-post">
-							<img src="img/profile.jpg" alt="" class="avt posts__new-post-img nav-wall">
+							<img th:src="@{img/profile.jpg}" alt="" class="avt posts__new-post-img nav-wall">
 							<button class="new-post-btn posts__new-post-btn">
 								Bạn đang nghĩ gì thế ?
 							</button>
@@ -123,25 +124,25 @@
 						<ul class="container-right__connect-list">
 							<li class="container-right__connect-item">
 								<div class="container-right__connect-item-avatar">
-									<img src="img/user_1.jpg" alt="" class="container-right__connect-item-img">
+									<img th:src="@{img/user_1.jpg}" alt="" class="container-right__connect-item-img">
 								</div>
 								<span class="container-right__connect-item-name">Nguyễn Lê Kim Ngân</span>
 							</li>
 							<li class="container-right__connect-item">
 								<div class="container-right__connect-item-avatar">
-									<img src="img/user_2.jpg" alt="" class="container-right__connect-item-img">
+									<img th:src="@{img/user_2.jpg}" alt="" class="container-right__connect-item-img">
 								</div>
 								<span class="container-right__connect-item-name">Ngọc Nhã</span>
 							</li>
 							<li class="container-right__connect-item">
 								<div class="container-right__connect-item-avatar">
-									<img src="img/user_3.jpg" alt="" class="container-right__connect-item-img">
+									<img th:src="@{img/user_3.jpg}" alt="" class="container-right__connect-item-img">
 								</div>
 								<span class="container-right__connect-item-name">Huệ Nguyễn</span>
 							</li>
 							<li class="container-right__connect-item">
 								<div class="container-right__connect-item-avatar">
-									<img src="img/user_4.jpg" alt="" class="container-right__connect-item-img">
+									<img th:src="@{img/user_4.jpg}" alt="" class="container-right__connect-item-img">
 								</div>
 								<span class="container-right__connect-item-name">Ân Hữu</span>
 							</li>

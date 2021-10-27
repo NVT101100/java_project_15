@@ -18,6 +18,13 @@ public class User {
 	private String email;
 	private int locked;
 	private int enabled;
+	private String role;
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
+	}
 	public Integer getUser_id() {
 		return user_id;
 	}

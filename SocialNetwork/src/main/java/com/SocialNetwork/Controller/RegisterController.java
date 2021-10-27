@@ -36,7 +36,8 @@ public class RegisterController {
 		user.setEmail(email);
 		user.setEnabled(1);
 		user.setLocked(1);
-		if (userRepository.findByEmail(user.getEmail()).isEmpty()) {
+		user.setRole("user");
+		if (userRepository.findByEmail(user.getEmail()) == null) {
 			userRepository.save(user);
 			return "redirect:login";
 		}
