@@ -12,7 +12,7 @@
 }
 .banner-img{
     width: inherit;
-    height: 100vh;
+    height: 120vh;
     object-fit: cover;
 }
 .banner__overlay {

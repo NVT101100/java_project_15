@@ -15,9 +15,9 @@
 <link rel="stylesheet" th:href="@{css/style.css}"/>
 <script
 	th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js}"></script>
-<script th:src="@{js/register.js}">
-	
-</script>
+<script th:src="@{js/register.js}"> </script>
+<script th:src="@{js/main.js}"></script>
+<script th:src="@{js/Validator.js}"></script>
 
 </head>
 <body>
@@ -29,18 +29,19 @@
 					<h2 class="form-section__heading">Đăng ký thành viên</h2>
 					<span class="form-section__sub-heading"> Fetel giúp bạn kết
 						nối và chia sẻ với mọi người trong khoa Điện tử - Viễn thông. </span>
+						<span class="form-section__sub-heading" th:text="${warning}"></span>
 				</div>
 				<div class="form-section__body">
-					<form action="/SocialNetwork/adduser" method="get"
+					<form method="post"
 						onsubmit="return verifyPassword()" id="form-register"
 						class="form-section__form">
 						<div class="form-section__form-group">
 							<label for="fullName" class="form-section__form-label">
 								Họ và tên </label>
 							<div class="form-section__form-input-wrap">
-								<input id="fullName" type="text" 
+								<input id="fullName" type="text" th:value="${fullName}"
 									class="form-section__form-input" name="fullName"
-									placeholder="Nguyễn Văn A" required pattern="[a-z;A-Z; ]{6,30}">
+									placeholder="Nguyễn Văn A" required pattern="[a-zA-Z àáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]{6,100}">
 								<span class="form-section__form-error-icon"> <svg
 										class="Input_icon__1WC0H" width="16" height="16"
 										viewBox="0 0 16 16">
@@ -52,8 +53,8 @@
                                 </path></svg>
 								</span>
 							</div>
-							<span class="form-section__form-message"> Vui lòng nhập
-								trường này </span>
+							<div><span class="form-section__form-message"> Vui lòng nhập
+								trường này </span></div>
 						</div>
 						<div class="form-section__form-group">
 							<label for="email" class="form-section__form-label">
@@ -81,7 +82,7 @@
 							<div class="form-section__form-input-wrap">
 								<input id="password" class="form-section__form-input"
 									name="password" type="password" placeholder="Mật khẩu của bạn"
-									required pattern="[0-9a-zA-Z]{4,16}"> <span
+									required pattern="[0-9a-zA-Z]{4,16}" > <span
 									class="form-section__form-group-icon hidden"
 									onclick="hiddenPassword()"> <i class="fas fa-eye"></i> <i
 									class="fas fa-eye-slash"></i>
