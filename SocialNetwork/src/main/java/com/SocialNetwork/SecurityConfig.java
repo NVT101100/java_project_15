@@ -15,41 +15,46 @@ import com.SocialNetwork.Service.MyUserDetailsService;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	
+
 	@Autowired
 	MyUserDetailsService userDetailsService;
 
 	@Bean
 	public DaoAuthenticationProvider authProvider() {
-	    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-	    authProvider.setUserDetailsService(userDetailsService);
-	    authProvider.setPasswordEncoder(passwordEncoder());
-	    return authProvider;
+		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+		authProvider.setUserDetailsService(userDetailsService);
+		authProvider.setPasswordEncoder(passwordEncoder());
+		return authProvider;
 	}
-	
+
 	@Bean
-    public PasswordEncoder passwordEncoder() {
-        // Password encoder, để Spring Security sử dụng mã hóa mật khẩu người dùng
-        return new BCryptPasswordEncoder();
-    }
+	public PasswordEncoder passwordEncoder() {
+		// Password encoder, để Spring Security sử dụng mã hóa mật khẩu người dùng
+		return new BCryptPasswordEncoder();
+	}
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) {
-	    auth.authenticationProvider(authProvider());
+		auth.authenticationProvider(authProvider());
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/register").permitAll() // Cho phép tất cả mọi người truy cập vào 2 địa
-				.anyRequest().authenticated() // Tất cả các request khác đều cần phải xác thực mới được truy cập
-				.and().formLogin().loginPage("/login").passwordParameter("password").usernameParameter("email")
-				.defaultSuccessUrl("/index").permitAll() // Tất cả đều được truy cập vào địa chỉ này
-				.and().logout() // Cho phép logout
-				.permitAll();
+		http.csrf().disable();
+		http.authorizeRequests()
+				.antMatchers("/register").permitAll()
+				.antMatchers("/css/**","/js/**","/img/**","/fonts/**").permitAll()
+				.antMatchers("/user/**","/").hasAnyAuthority("user","admin")
+				.antMatchers("/admin/**").hasAuthority("admin")
+				.anyRequest().authenticated()
+				.and().formLogin().loginPage("/login").passwordParameter("password")
+				.usernameParameter("email").defaultSuccessUrl("/user/index").permitAll().and().logout().permitAll();
 	}
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/js/**").antMatchers("/css/**").antMatchers("/img/**").antMatchers("/font/**");
+		web
+        .ignoring()
+        .antMatchers("/**/*.{js,css,jpg}");
 	}
 }

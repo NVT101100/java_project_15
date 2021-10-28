@@ -22,7 +22,7 @@ public class MyUserDetailsService implements UserDetailsService {
         }
         UserDetails user = org.springframework.security.core.userdetails.User.withUsername(customer.getEmail())
             .password(customer.getUser_password())
-            .authorities("USER").build();
+            .authorities(customer.getRole()).build();
         return user;
     }
 }
