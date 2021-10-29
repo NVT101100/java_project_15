@@ -74,14 +74,6 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
 		</dependency>
-<<<<<<< HEAD
-=======
-		<dependency>
-			<groupId>org.thymeleaf.extras</groupId>
-			<artifactId>thymeleaf-extras-springsecurity4</artifactId>
-			<version>3.0.2.RELEASE</version>
-		</dependency>
->>>>>>> b294e1654464e6366dd5c35e19e7cb01c33c5ba5
 
 	</dependencies>
 
