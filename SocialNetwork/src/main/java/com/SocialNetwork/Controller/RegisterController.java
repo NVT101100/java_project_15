@@ -38,6 +38,7 @@ public class RegisterController {
 		user.setEnabled(0);
 		user.setLocked(0);
 		user.setRole("user");
+		user.setProfile(null);
 		if (userRepository.findByEmail(user.getEmail()) == null) {
 			userRepository.save(user);
 			model.setViewName("users/login");

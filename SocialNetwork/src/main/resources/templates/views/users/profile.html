@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Hưng Dương</title>
+	<link th:href="@{https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap}"
+		rel="stylesheet" />
+	<link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.css}" />
+	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+	<link rel="stylesheet" th:href="@{/css/base.css}" />
+	<link rel="stylesheet" th:href="@{/css/main.css}" />
+	<link rel="stylesheet" th:href="@{/css/profile.css}" />
+	<script type="text/javascript" th:src = "@{/js/profile.js}"></script>
+</head>
+
+<body>
+	<div class="my-wall">
+		<div class="my-wall__head">
+			<div class="my-wall__top">
+				<div class="my-wall__top-bg--big">
+					<div class="my-wall__top-bg">
+						<img th:src="@{/img/bg.jpg}" alt="" class="my-wall__top-bg-img">
+						<div class="my-wall__top-bg__edit">
+							<i class="fas fa-camera my-wall__top-bg__edit-icon"></i>
+							<div class="my-wall__top-bg__edit-text">
+								Chỉnh sửa ảnh bìa
+							</div>
+						</div>
+					</div>
+					<div class="my-wall__top-bg-avatar">
+						<img id = "profileImage" alt="" class="my-wall__top-bg-avatar__img">
+						<div class="my-wall__top-bg-avatar__edit" onclick="editProfileImage()">
+							<i class="fas fa-camera my-wall__top-bg-avatar__edit-icon"  >
+							</i>
+						</div>
+					</div>
+				</div>
+				<div class="my-wall__top-info">
+					<p class="my-wall__top-info-name full-name">
+						Hưng Dương
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="my-wall__head-more">
+			<ul class="my-wall__head-more-list">
+				<li class="my-wall__head-more-item">
+					<div class="my-wall__head-more-item__title">
+						Bài viết
+					</div>
+				</li>
+				<li class="my-wall__head-more-item">
+					<div class="my-wall__head-more-item__title">
+						Bạn bè
+						<span>
+							254
+						</span>
+					</div>
+				</li>
+				<li class="my-wall__head-more-item">
+					<div class="my-wall__head-more-item__title">
+						Ảnh
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="my-wall__main">
+			<div class="my-wall__main-left">
+				<div class="my-wall__main-left__friends">
+					<div class="main-left__friends-head">
+						<div class="main-left__heading">
+							Bạn bè
+							<div class="main-left__heading-sub">
+								425 người bạn
+							</div>
+						</div>
+					</div>
+					<ul class="main-left__friends-list">
+						<li class="main-left__friends-item">
+							<div class="main-left__friends-item-avatar">
+								<img th:src="@{/img/user_1.jpg}" alt="" class="imgmain-left__friends-img">
+							</div>
+							<div class="main-left__friends-item-text">
+								Nguyễn Lê Kim Ngân
+							</div>
+						</li>
+						<li class="main-left__friends-item">
+							<div class="main-left__friends-item-avatar">
+								<img th:src="@{/img/user_2.jpg}" alt="" class="imgmain-left__friends-img">
+							</div>
+							<div class="main-left__friends-item-text">
+								Ngọc Nhã
+							</div>
+						</li>
+						<li class="main-left__friends-item">
+							<div class="main-left__friends-item-avatar">
+								<img src="img/user_3.jpg" alt="" class="imgmain-left__friends-img">
+							</div>
+							<div class="main-left__friends-item-text">
+								Huệ Nguyễn
+							</div>
+						</li>
+						<li class="main-left__friends-item">
+							<div class="main-left__friends-item-avatar">
+								<img src="img/user_4.jpg" alt="" class="imgmain-left__friends-img">
+							</div>
+							<div class="main-left__friends-item-text">
+								Hữu Ân
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="my-wall__main-right">
+				<div class="main-right__posts">
+					<div class="posts__new-post">
+						<img th:src="@{/img/profile.jpg}" alt="" class="posts__new-post-img">
+						<button class="new-post-btn posts__new-post-btn">Bạn đang nghĩ gì thế ?</button>
+					</div>
+					<ul class="post__action">
+						<li class="post__action-item">
+							<i class="fas fa-video post__action-item-icon"></i>
+							<span class="post__action-item-text">Video trực tiếp</span>
+						</li>
+						<li class="post__action-item uploadfile single">
+							<i class="fas fa-images post__action-item-icon"></i>
+							<span class="post__action-item-text">Ảnh/Video</span>
+						</li>
+						<li class="post__action-item">
+							<i class="far fa-laugh post__action-item-icon"></i>
+							<span class="post__action-item-text">Cảm xúc/Hoạt động</span>
+						</li>
+					</ul>
+				</div>
+				<div class="main-right__newsfeed">
+					<div class="newsfeed">
+						<div class="newsfeed__info">
+							<div class="newsfeed__info-profile">
+								<img class="newsfeed__-profile-avt" th:src="@{img/profile.jpg}">
+								<div class="newsfeed__info-profile-more">
+									<span class="newsfeed__info-name checked">
+										Hưng Dương
+									</span>
+									<div class="newsfeed__info-time">
+										10 phút trước
+										<i class="fas fa-globe-europe"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="newsfeed__content">
+							<p class="newsfeed__content-text">
+								Hưng Dương vừa cập nhật ảnh đại diện của "CÔ ẤY"
+							</p>
+							<img src="img/user_1.jpg" alt="" class="newsfeed__content-img">
+						</div>
+						<div class="newsfeed__respond-react">
+							<div class="newsfeed__respond-react-icon">
+								<i class="far fa-heart"></i>
+							</div>
+							<span class="newsfeed__respond-react-total">1 like</span>
+
+							<span class="newsfeed__respond-right">Bình luận</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

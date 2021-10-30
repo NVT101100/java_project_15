@@ -246,31 +246,6 @@ input[type=checkbox] ~ .form-section__form-label {
 }
 
 
-@keyframes bellAni {
-	0% {
-		transform: rotate(-20deg);
-	}
-
-	20% {
-		transform: rotate(20deg);
-	}
-
-	40% {
-		transform: rotate(-20deg);
-	}
-
-	60% {
-		transform: rotate(20deg);
-	}
-
-	80% {
-		transform: rotate(-20deg);
-	}
-
-	100% {
-		transform: rotate(0);
-	}
-}
 .modal{
     position: fixed;
     left: 0;
