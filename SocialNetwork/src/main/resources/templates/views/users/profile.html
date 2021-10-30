@@ -11,7 +11,7 @@
 	<link th:href="@{https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap}"
 		rel="stylesheet" />
 	<link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.css}" />
-	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+	<script th:src="@{https://code.jquery.com/jquery-3.6.0.js}"></script>
 	<link rel="stylesheet" th:href="@{/css/base.css}" />
 	<link rel="stylesheet" th:href="@{/css/main.css}" />
 	<link rel="stylesheet" th:href="@{/css/profile.css}" />
@@ -26,7 +26,7 @@
 					<div class="my-wall__top-bg">
 						<img th:src="@{/img/bg.jpg}" alt="" class="my-wall__top-bg-img">
 						<div class="my-wall__top-bg__edit">
-							<i class="fas fa-camera my-wall__top-bg__edit-icon"></i>
+							<i class="fas fa-camera my-wall__top-bg__edit-icon" ></i>
 							<div class="my-wall__top-bg__edit-text">
 								Chỉnh sửa ảnh bìa
 							</div>

@@ -5,10 +5,23 @@ function editProfileImage(){
 	  input.onchange = _ => {
 		  var reader = new FileReader();
           reader.onload = function (e) {
-              profileImage.src = e.target.result;
-              const  files  = e.target;
-          	
-          	console.log("files", files)
+        	  var formData = new FormData();
+        	  formData.append("myFile", e.target);
+        	 $.ajax({
+        		type : "POST",
+ 				contentType : "application/json",
+ 				url : "/SocialNetwork/user/profile/addprofile",
+ 				data : formdata,
+ 				dataType : 'json',
+ 				timeout : 100000,
+ 				success : function(data) {
+ 					console.log("SUCCESS: ", data);
+
+ 				},
+ 				error : function(e) {
+ 					console.log("ERROR: ", e);
+ 				}
+        	 });
           };
           reader.readAsDataURL(input.files[0]);
 	   };

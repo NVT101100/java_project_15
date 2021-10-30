@@ -8,8 +8,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Facebook</title>
-<script
-	th:src="@{/js/jquery.js}"></script>
 <link
 	th:href="@{https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap}"
 	rel="stylesheet">
@@ -17,7 +15,8 @@
 <link rel="stylesheet" th:href="@{/css/main.css}">
 <link rel="stylesheet"
 	th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.css}">
-<script type="text/javascript" th:src="@{/js/post.js}"></script>
+	<script th:src="@{https://code.jquery.com/jquery-3.6.0.js}"></script>
+<script type="text/javascript" th:src="@{/js/app.js}"></script>
 
 </head>
 
@@ -89,7 +88,7 @@
 						<div class="posts__new-post">
 							<img src="" alt=""
 								class="avt posts__new-post-img nav-wall">
-							<button class="new-post-btn posts__new-post-btn" id="newPost">
+							<button type="button"  class="new-post-btn posts__new-post-btn" id="newPost" onclick="showBox()">
 								Bạn đang nghĩ gì thế ?</button>
 						</div>
 						<ul class="post__action">
@@ -109,7 +108,7 @@
 						<div class="newsfeed">
 							<div class="newsfeed__info">
 								<div class="newsfeed__info-profile">
-									<img class="newsfeed__-profile-avt"
+									<img class="header-profile__img avt"
 										th:src="@{'/img/'+${defaultAvatar}}">
 									<div class="newsfeed__info-profile-more">
 										<span class="newsfeed__info-name checked"> Hưng Dương </span>
@@ -134,7 +133,7 @@
 							<div class="newsfeed__comment">
 								<div class="newsfeed__comment-user">
 									<img th:src="@{'/img/'+${defaultAvatar}}" alt=""
-										class="newsfeed__comment-img">
+										class="header-profile__img avt">
 									<div class="newsfeed__comment-box">
 										<input type="text" placeholder="Viết bình luận ..."
 											class="newsfeed__comment-input">
@@ -190,12 +189,12 @@
 					</div>
 				</div>
 			</div>
-			<div class="overplay" style="display: none;">
+			<div class="overplay" id = "overplay" style="display: none;">
 				<div class="overplay-body">
 					<div class="post-box">
 						<div class="post-box__head">
 							<h3 class="post-box__head-text">Tạo bài viết</h3>
-							<span class="post-box__head-close"> <i
+							<span class="post-box__head-close" onclick="closeOverplay()"> <i
 								class="fas fa-times"></i>
 							</span>
 						</div>
@@ -208,8 +207,8 @@
 								</div>
 							</div>
 							<div class="post-box__content">
-								<textarea placeholder="Bạn đang nghĩ gì thế ?" type="text"
-									class="post-box__content-textarea"></textarea>
+								<textarea placeholder="Bạn đang nghĩ gì thế ?" oninput="checkSubmit()"
+									class="post-box__content-textarea" id = "postContent"></textarea>
 
 							</div>
 							<div class="post-box__add">
@@ -221,7 +220,7 @@
 									</div>
 								</div>
 							</div>
-							<button class="post-box__btn btn-disable">Đăng</button>
+							<button class="post-box__btn btn-active" id = "postBtn" type = "submit">Đăng</button>
 						</div>
 					</div>
 				</div>
