@@ -44,6 +44,7 @@ public class RegisterController {
 		user.setRole("user");
 		user.setProfile(null);
 		user.setProfile(profileImage.GetProfileImageBydefault(gender));
+		user.setCover(profileImage.setDefaultCover());
 		if (userRepository.findByEmail(user.getEmail()) == null) {
 			userRepository.save(user);
 			model.setViewName("users/login");

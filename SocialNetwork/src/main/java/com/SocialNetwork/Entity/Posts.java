@@ -21,7 +21,7 @@ public class Posts {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int post_id;
 	@Lob
-	private byte[] image;
+	private String image;
 	private String status;
 	private String date;
 	private String time;
@@ -31,17 +31,17 @@ public class Posts {
 	public void setUserPost(User userPost) {
 		this.userPost = userPost;
 	}
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id",referencedColumnName="user_id")
 	public User userPost;
 	
 	public int getPost_id() {
 		return post_id;
 	}
-	public byte[] getImage() {
+	public String getImage() {
 		return image;
 	}
-	public void setImage(byte[] image) {
+	public void setImage(String image) {
 		this.image = image;
 	}
 	public String getStatus() {

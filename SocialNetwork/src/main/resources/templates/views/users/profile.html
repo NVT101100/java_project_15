@@ -19,13 +19,14 @@
 </head>
 
 <body>
-	<div class="my-wall">
+	<div class="my-wall" th:object="${currentUser}"> 
+	<span id="userId" style="display: none;" th:text="${currentUser.user_id}"></span>
 		<div class="my-wall__head">
 			<div class="my-wall__top">
 				<div class="my-wall__top-bg--big">
 					<div class="my-wall__top-bg">
-						<img th:src="@{/img/bg.jpg}" alt="" class="my-wall__top-bg-img">
-						<div class="my-wall__top-bg__edit">
+						<img id = "coverImage" th:src="@{'data:image/png;base64,'+${currentUser.cover}}" alt="" class="my-wall__top-bg-img">
+						<div class="my-wall__top-bg__edit" onclick="editCoverImage()">
 							<i class="fas fa-camera my-wall__top-bg__edit-icon" ></i>
 							<div class="my-wall__top-bg__edit-text">
 								Chỉnh sửa ảnh bìa
@@ -33,7 +34,7 @@
 						</div>
 					</div>
 					<div class="my-wall__top-bg-avatar">
-						<img id = "profileImage" alt="" class="my-wall__top-bg-avatar__img">
+						<img th:src="@{'data:image/png;base64,'+${currentUser.profile}}" id = "profileImage" alt="" class="my-wall__top-bg-avatar__img">
 						<div class="my-wall__top-bg-avatar__edit" onclick="editProfileImage()">
 							<i class="fas fa-camera my-wall__top-bg-avatar__edit-icon"  >
 							</i>
@@ -41,8 +42,7 @@
 					</div>
 				</div>
 				<div class="my-wall__top-info">
-					<p class="my-wall__top-info-name full-name">
-						Hưng Dương
+					<p class="my-wall__top-info-name full-name" th:text="${currentUser.fullname}">
 					</p>
 				</div>
 			</div>

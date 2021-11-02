@@ -61,7 +61,7 @@
 						<li class="header-right__item"><i
 							class="fas fa-bell header-right__item-notify"></i></li>
 						<li class="header-right__item"><img
-							th:src="@{'/user/displayProfile/'+${currentUser.user_id}}" alt=""
+							th:src="@{'data:image/png;base64,'+${currentUser.profile}}" alt=""
 							class="header-profile__img avt"></li>
 					</ul>
 				</div>
@@ -71,7 +71,7 @@
 				<div class="container-left__favorite">
 					<ul class="favorite-list">
 						<li class="favorite-item nav-wall"><img
-							th:src="@{'/user/displayProfile/'+${currentUser.user_id}}" alt=""
+							th:src="@{'data:image/png;base64,'+${currentUser.profile}}" alt=""
 							class="avt favorite-item__img">
 							 <a style="text-decoration:none" class="favorite-item__text full-name" th:text="${currentUser.fullname}" th:href="@{'/user/profile/'+${currentUser.user_id}}"></a>
 						</li>
@@ -86,7 +86,7 @@
 				<div class="container-main">
 					<div class="container-posts">
 						<div class="posts__new-post">
-							<img th:src="@{'/user/displayProfile/'+${currentUser.user_id}}" alt=""
+							<img th:src="@{'data:image/png;base64,'+${currentUser.profile}}" alt=""
 								class="avt posts__new-post-img nav-wall">
 							<button type="button"  class="new-post-btn posts__new-post-btn" id="newPost" onclick="showBox()">
 								Bạn đang nghĩ gì thế ?</button>
@@ -109,7 +109,7 @@
 							<div class="newsfeed__info">
 								<div class="newsfeed__info-profile">
 									<img class="header-profile__img avt"
-										th:src="@{'/user/displayProfile/'+${post.userPost.user_id}}">
+										th:src="@{'data:image/png;base64,'+${currentUser.profile}}">
 									<div class="newsfeed__info-profile-more">
 										<span class="newsfeed__info-name checked" th:text="${post.userPost.fullname}"></span>
 										<div class="newsfeed__info-time">
@@ -120,7 +120,8 @@
 							</div>
 							<div class="newsfeed__content">
 								<p class="newsfeed__content-text" th:text="${post.status}"></p>
-								<img th:src="@{'/user/displayPostImage/'+${post.post_id}}" alt="" class="newsfeed__content-img">
+								<p id = "imageCode" class="newsfeed__content-text"></p>
+								<img th:src="@{'data:image/png;base64,'+${post.image}}" alt="" class="newsfeed__content-img">
 							</div>
 							<div class="newsfeed__respond-react">
 								<div class="newsfeed__respond-react-icon">
@@ -131,7 +132,7 @@
 							</div>
 							<div class="newsfeed__comment">
 								<div class="newsfeed__comment-user">
-									<img th:src="@{'/user/displayProfile/'+${currentUser.user_id}}" alt=""
+									<img th:src="@{'data:image/png;base64,'+${currentUser.profile}}" alt=""
 										class="header-profile__img avt">
 									<div class="newsfeed__comment-box">
 										<input type="text" placeholder="Viết bình luận ..."
@@ -159,7 +160,7 @@
 						<ul class="container-right__connect-list" th:each="friend: ${friends}">
 							<li class="container-right__connect-item">
 								<div class="container-right__connect-item-avatar">
-									<img th:src="@{'/user/displayProfile/'+${friend.user_id}}" alt=""
+									<img th:src="@{'data:image/png;base64,'+${friend.profile}}" alt=""
 										class="container-right__connect-item-img">
 								</div> <a style="text-decoration:none" class="container-right__connect-item-name" th:text="${friend.fullname}"></a>
 							</li>
@@ -178,7 +179,7 @@
 						</div>
 						<div class="post-box__main">
 							<div class="post-box__info">
-								<img th:src="@{'/user/displayProfile/'+${currentUser.user_id}}" alt=""
+								<img th:src="@{'data:image/png;base64,'+${currentUser.profile}}" alt=""
 									class="post-box__avatar">
 								<div class="post-box__info-info">
 									<p class="post-box__info-name" th:text="${currentUser.fullname}"></p>

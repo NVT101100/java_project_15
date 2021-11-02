@@ -27,23 +27,23 @@ public class User {
 	private int enabled;
 	private String role;
 	@Lob
-	private byte[] profile;
+	private String profile;
 	@Lob
-	private byte[] cover;
+	private String cover;
 	
 	@OneToMany(mappedBy="userPost",fetch = FetchType.LAZY,cascade=CascadeType.ALL)
 	private List<Posts> posts;
 	
-	public byte[] getCover() {
+	public String getCover() {
 		return cover;
 	}
-	public void setCover(byte[] cover) {
+	public void setCover(String cover) {
 		this.cover = cover;
 	}
-	public byte[] getProfile() {
+	public String getProfile() {
 		return profile;
 	}
-	public void setProfile(byte[] profile) {
+	public void setProfile(String profile) {
 		this.profile = profile;
 	}
 	public String getRole() {

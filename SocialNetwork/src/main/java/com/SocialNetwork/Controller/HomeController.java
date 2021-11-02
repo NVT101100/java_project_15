@@ -2,6 +2,7 @@ package com.SocialNetwork.Controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.SocialNetwork.Entity.Posts;
@@ -28,7 +30,6 @@ public class HomeController {
 	private UserRepository repository;
 	private String currentEmail = null;
 	private int islocked = 1, isenabled = 0;
-	private User user;
 	private List<User> Users = new ArrayList<>();
 	private List<Posts> postList = new ArrayList<>();
 	
@@ -38,7 +39,7 @@ public class HomeController {
 	@GetMapping("/user/index")
 	public ModelAndView homePage(Authentication authentication,HttpServletResponse response) {
 		currentEmail = authentication.getName();
-		user = repository.findByEmail(currentEmail);
+		User user = repository.findByEmail(currentEmail);
 		islocked = user.getLocked();
 		isenabled = user.getEnabled();
 		if (islocked == 0 && isenabled == 1) {
@@ -55,27 +56,12 @@ public class HomeController {
 		}
 	}
 	
-	
-	@GetMapping("/user/displayProfile/{userId}")
-	@ResponseBody
-	void showFriendProfile(HttpServletResponse response,@PathVariable("userId") Integer id) {
-		Optional<User> user = repository.findById(id);
-		response.setContentType("image/jpeg, image/jpg, image/png, image/gif");
-		try {
-			response.getOutputStream().write(user.get().getProfile());
-			response.getOutputStream().close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
 	@PostMapping("/user/post/{userId}")
 	public @ResponseBody String postStatus(@PathVariable("userId") String userId,@RequestBody PostSheet post) {
 		Posts posts = new Posts();
 		List<Posts> listPost = new ArrayList<Posts>();
 		User userpost = repository.findById(Integer.valueOf(userId)).get();
-		posts.setImage(post.getImage());
+		posts.setImage(Base64.getEncoder().encodeToString(post.getImage()));
 		posts.setStatus(post.getStatus());
 		posts.setDate(post.getDate());
 		posts.setUserPost(userpost);
@@ -86,17 +72,4 @@ public class HomeController {
 		return "true";
 	}
 	
-	@GetMapping("/user/displayPostImage/{postId}")
-	@ResponseBody
-	void showPostImage(HttpServletResponse response,@PathVariable("postId") Integer id) {
-		Posts posts = postRepository.findById(id).get();
-		response.setContentType("image/jpeg, image/jpg, image/png, image/gif");
-		try {
-			response.getOutputStream().write(posts.getImage());
-			response.getOutputStream().close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 }
