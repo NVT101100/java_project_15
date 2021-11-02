@@ -23,6 +23,7 @@ public class LoginController {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("users/login");
 		model.addObject("warningmessage", "Tài khoản hoặc mật khẩu không chính xác!");
+		model.addObject("isSuccess", "none");
 		return model;
 	}
 	

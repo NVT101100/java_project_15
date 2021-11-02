@@ -11,18 +11,18 @@
 <link
 	th:href="@{https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap}"
 	rel="stylesheet">
+<link rel="stylesheet"
+	th:href="@{https://pro.fontawesome.com/releases/v6.0.0-beta1/css/all.css}">
 <link rel="stylesheet" th:href="@{/css/base.css}">
 <link rel="stylesheet" th:href="@{/css/main.css}">
-<link rel="stylesheet"
-	th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.css}">
+<link rel="stylesheet" th:href="@{/css/profile.css}">
 	<script th:src="@{https://code.jquery.com/jquery-3.6.0.js}"></script>
-<script type="text/javascript" th:src="@{/js/app.js}"></script>
 
 </head>
 
 <body>
 
-	<div class="app">
+	<div class="app" th:object="${currentUser}">
 		<div class="app-grid">
 			<header class="header">
 				<div class="header-grid">
@@ -61,7 +61,7 @@
 						<li class="header-right__item"><i
 							class="fas fa-bell header-right__item-notify"></i></li>
 						<li class="header-right__item"><img
-							th:src="@{'/img/'+${defaultAvatar}}" alt=""
+							th:src="@{'/user/displayProfile/'+${currentUser.user_id}}" alt=""
 							class="header-profile__img avt"></li>
 					</ul>
 				</div>
@@ -71,9 +71,9 @@
 				<div class="container-left__favorite">
 					<ul class="favorite-list">
 						<li class="favorite-item nav-wall"><img
-							th:src="@{'/img/'+${defaultAvatar}}" alt=""
-							class="avt favorite-item__img"> <span
-							class="favorite-item__text full-name" th:text="${fullname}"></span>
+							th:src="@{'/user/displayProfile/'+${currentUser.user_id}}" alt=""
+							class="avt favorite-item__img">
+							 <a style="text-decoration:none" class="favorite-item__text full-name" th:text="${currentUser.fullname}" th:href="@{'/user/profile/'+${currentUser.user_id}}"></a>
 						</li>
 						<li class="favorite-item"><img
 							th:src="@{/img/item-fav-1.png}" alt="" class="favorite-item__img">
@@ -86,7 +86,7 @@
 				<div class="container-main">
 					<div class="container-posts">
 						<div class="posts__new-post">
-							<img src="" alt=""
+							<img th:src="@{'/user/displayProfile/'+${currentUser.user_id}}" alt=""
 								class="avt posts__new-post-img nav-wall">
 							<button type="button"  class="new-post-btn posts__new-post-btn" id="newPost" onclick="showBox()">
 								Bạn đang nghĩ gì thế ?</button>
@@ -104,14 +104,14 @@
 						</ul>
 					</div>
 
-					<div class="container-newsfeed-list">
+					<div class="container-newsfeed-list" th:each="post : ${posts}" >
 						<div class="newsfeed">
 							<div class="newsfeed__info">
 								<div class="newsfeed__info-profile">
 									<img class="header-profile__img avt"
-										th:src="@{'/img/'+${defaultAvatar}}">
+										th:src="@{'/user/displayProfile/'+${post.userPost.user_id}}">
 									<div class="newsfeed__info-profile-more">
-										<span class="newsfeed__info-name checked"> Hưng Dương </span>
+										<span class="newsfeed__info-name checked" th:text="${post.userPost.fullname}"></span>
 										<div class="newsfeed__info-time">
 											10 phút trước <i class="fas fa-globe-europe"></i>
 										</div>
@@ -119,9 +119,8 @@
 								</div>
 							</div>
 							<div class="newsfeed__content">
-								<p class="newsfeed__content-text">Hưng Dương vừa cập nhật
-									ảnh đại diện của "CÔ ẤY"</p>
-								<img src="img/user_1.jpg" alt="" class="newsfeed__content-img">
+								<p class="newsfeed__content-text" th:text="${post.status}"></p>
+								<img th:src="@{'/user/displayPostImage/'+${post.post_id}}" alt="" class="newsfeed__content-img">
 							</div>
 							<div class="newsfeed__respond-react">
 								<div class="newsfeed__respond-react-icon">
@@ -132,7 +131,7 @@
 							</div>
 							<div class="newsfeed__comment">
 								<div class="newsfeed__comment-user">
-									<img th:src="@{'/img/'+${defaultAvatar}}" alt=""
+									<img th:src="@{'/user/displayProfile/'+${currentUser.user_id}}" alt=""
 										class="header-profile__img avt">
 									<div class="newsfeed__comment-box">
 										<input type="text" placeholder="Viết bình luận ..."
@@ -157,39 +156,18 @@
 								<i class="fal fa-search"></i>
 							</div>
 						</div>
-						<ul class="container-right__connect-list">
+						<ul class="container-right__connect-list" th:each="friend: ${friends}">
 							<li class="container-right__connect-item">
 								<div class="container-right__connect-item-avatar">
-									<img th:src="@{/img/user_1.jpg}" alt=""
+									<img th:src="@{'/user/displayProfile/'+${friend.user_id}}" alt=""
 										class="container-right__connect-item-img">
-								</div> <span class="container-right__connect-item-name">Nguyễn
-									Lê Kim Ngân</span>
-							</li>
-							<li class="container-right__connect-item">
-								<div class="container-right__connect-item-avatar">
-									<img th:src="@{/img/user_2.jpg}" alt=""
-										class="container-right__connect-item-img">
-								</div> <span class="container-right__connect-item-name">Ngọc
-									Nhã</span>
-							</li>
-							<li class="container-right__connect-item">
-								<div class="container-right__connect-item-avatar">
-									<img th:src="@{/img/user_3.jpg}" alt=""
-										class="container-right__connect-item-img">
-								</div> <span class="container-right__connect-item-name">Huệ
-									Nguyễn</span>
-							</li>
-							<li class="container-right__connect-item">
-								<div class="container-right__connect-item-avatar">
-									<img th:src="@{/img/user_4.jpg}" alt=""
-										class="container-right__connect-item-img">
-								</div> <span class="container-right__connect-item-name">Ân Hữu</span>
+								</div> <a style="text-decoration:none" class="container-right__connect-item-name" th:text="${friend.fullname}"></a>
 							</li>
 						</ul>
 					</div>
 				</div>
 			</div>
-			<div class="overplay" id = "overplay" style="display: none;">
+			<div class="overplay" id = "overplay" style="display: none;" th:object="${currentUser}">
 				<div class="overplay-body">
 					<div class="post-box">
 						<div class="post-box__head">
@@ -200,33 +178,35 @@
 						</div>
 						<div class="post-box__main">
 							<div class="post-box__info">
-								<img th:src="@{'/img/'+${defaultAvatar}}" alt=""
+								<img th:src="@{'/user/displayProfile/'+${currentUser.user_id}}" alt=""
 									class="post-box__avatar">
 								<div class="post-box__info-info">
-									<p class="post-box__info-name">Hưng Dương</p>
+									<p class="post-box__info-name" th:text="${currentUser.fullname}"></p>
+									<span id="userId" style="display:none;" th:text="${currentUser.user_id}"></span>
 								</div>
 							</div>
 							<div class="post-box__content">
-								<textarea placeholder="Bạn đang nghĩ gì thế ?" oninput="checkSubmit()"
-									class="post-box__content-textarea" id = "postContent"></textarea>
-
+								<textarea id = "postContent" placeholder="Bạn đang nghĩ gì thế ?" oninput="checkSubmit()"
+									class="post-box__content-textarea"></textarea>
+								<img id = "uploadImage" alt="" width="468" height="468">
 							</div>
 							<div class="post-box__add">
 								<div class="post-box__add-head">Thêm vào bài viết</div>
 								<div class="post-box__add-more">
-									<div class="post-box__add-icon">
-										<input type="file" class="input-upload" hidden="hidden">
+									<label class="post-box__add-icon">
 										<i style="color: #45bd62;" class="fas fa-images"></i>
-									</div>
+										<input type="file" id = "postImage" class="input-upload" style="display:none;">
+									</label>
 								</div>
 							</div>
-							<button class="post-box__btn btn-active" id = "postBtn" type = "submit">Đăng</button>
+							<button class="post-box__btn btn-active" id = "postBtn" type="submit" onclick="postStatus()">Đăng</button>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<script th:inline="javascript" type="text/javascript" th:src="@{/js/app.js}"></script>
 </body>
 
 </html>

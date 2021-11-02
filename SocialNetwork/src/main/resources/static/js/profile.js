@@ -1,29 +1,29 @@
 function editProfileImage(){
 	 let input = document.createElement("input");
 	 var profileImage = document.getElementById("profileImage");
-	  input.type = "file";
-	  input.onchange = _ => {
-		  var reader = new FileReader();
-          reader.onload = function (e) {
-        	  var formData = new FormData();
-        	  formData.append("myFile", e.target);
-        	 $.ajax({
-        		type : "POST",
- 				contentType : "application/json",
- 				url : "/SocialNetwork/user/profile/addprofile",
- 				data : formdata,
- 				dataType : 'json',
- 				timeout : 100000,
- 				success : function(data) {
- 					console.log("SUCCESS: ", data);
-
- 				},
- 				error : function(e) {
- 					console.log("ERROR: ", e);
- 				}
-        	 });
+	 var formData = new FormData();
+	 var reader = new FileReader();
+	 input.type = "file";
+	 input.name = "imagefile";
+	 input.onchange = () => {
+    	 reader.onload = function (e) {
+         	 profileImage.src = e.target.result;
           };
-          reader.readAsDataURL(input.files[0]);
-	   };
-	  input.click();
+         reader.readAsDataURL(input.files[0]);
+         formData.append("images", input.files[0]);
+         $.ajax({
+        	 type : "POST",
+        	 url : "/SocialNetwork/user/profile/addprofile",
+        	 data : formData,
+        	 processData: false,
+        	 contentType: false,
+        	 success : function(data) {
+        		 alert("Thay đổi ảnh đại diện thành công");
+        	 },
+        	 error : function(e) {
+        		 alert("Đã xảy ra lỗi");
+        	 }
+         });
+	 };
+	 input.click();
 }

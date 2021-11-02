@@ -1,8 +1,8 @@
 package com.SocialNetwork.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,12 +12,16 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.SocialNetwork.Entity.User;
 import com.SocialNetwork.Repository.UserRepository;
+import com.SocialNetwork.Service.GetDefaultProfileImage;
 import com.SocialNetwork.Service.PasswordEncoder;
 
 @Controller
 public class RegisterController {
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	ResourceLoader resourceLoader;
+	private GetDefaultProfileImage profileImage = new GetDefaultProfileImage();
 
 	@GetMapping("/register")
 	public String addNewUser() {
@@ -39,6 +43,7 @@ public class RegisterController {
 		user.setLocked(0);
 		user.setRole("user");
 		user.setProfile(null);
+		user.setProfile(profileImage.GetProfileImageBydefault(gender));
 		if (userRepository.findByEmail(user.getEmail()) == null) {
 			userRepository.save(user);
 			model.setViewName("users/login");

@@ -1,10 +1,16 @@
 package com.SocialNetwork.Entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -22,6 +28,18 @@ public class User {
 	private String role;
 	@Lob
 	private byte[] profile;
+	@Lob
+	private byte[] cover;
+	
+	@OneToMany(mappedBy="userPost",fetch = FetchType.LAZY,cascade=CascadeType.ALL)
+	private List<Posts> posts;
+	
+	public byte[] getCover() {
+		return cover;
+	}
+	public void setCover(byte[] cover) {
+		this.cover = cover;
+	}
 	public byte[] getProfile() {
 		return profile;
 	}
@@ -76,4 +94,11 @@ public class User {
 	public void setEnabled(int enabled) {
 		this.enabled = enabled;
 	}
+	public List<Posts> getPosts() {
+		return posts;
+	}
+	public void setPosts(List<Posts> posts) {
+		this.posts = posts;
+	}
+	
 }
