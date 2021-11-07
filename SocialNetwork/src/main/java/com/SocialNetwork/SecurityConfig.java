@@ -41,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
+		http.rememberMe().key("Secret").tokenValiditySeconds(3600);
 		http.authorizeRequests()
 				.antMatchers("/register","/login","/error","/invalid").permitAll()
 				.antMatchers("/css/**","/js/**","/img/**","/fonts/**").permitAll()
@@ -50,7 +51,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.and().formLogin().loginPage("/login").passwordParameter("password")
 				.usernameParameter("email").defaultSuccessUrl("/user/index")
 				.failureUrl("/login/error")
-				.permitAll().and().logout().permitAll();
+				.permitAll().and().logout().logoutSuccessUrl("/login")
+				.permitAll();
 	}
 
 	@Override

@@ -11,7 +11,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "users", schema = "socialnetwork")
@@ -20,20 +24,58 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer user_id;
 	private String user_password;
-	private String fullname;
+	public String fullname;
 	private String sex;
 	private String email;
 	private int locked;
 	private int enabled;
 	private String role;
 	@Lob
-	private String profile;
+	public String profile;
 	@Lob
 	private String cover;
 	
 	@OneToMany(mappedBy="userPost",fetch = FetchType.LAZY,cascade=CascadeType.ALL)
+	@JsonManagedReference
 	private List<Posts> posts;
 	
+	@OneToMany(mappedBy="user2",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+	@JsonManagedReference
+	private List<Friends> friend1;
+	
+	@OneToMany(mappedBy="user1",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+	@JsonManagedReference
+	private List<Friends> friend2;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy="user",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+	private List<Actions> actions;
+	
+	@OneToMany(mappedBy="sender",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+	@JsonManagedReference
+	private List<Nontifications> nons1;
+	
+	public List<Nontifications> getNons1() {
+		return nons1;
+	}
+	public void setNons1(List<Nontifications> nons1) {
+		this.nons1 = nons1;
+	}
+	public List<Nontifications> getNons2() {
+		return nons2;
+	}
+	public void setNons2(List<Nontifications> nons2) {
+		this.nons2 = nons2;
+	}
+	@OneToMany(mappedBy="receiver",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+	private List<Nontifications> nons2;
+	
+	public List<Actions> getLikes() {
+		return actions;
+	}
+	public void setLikes(List<Actions> actions) {
+		this.actions = actions;
+	}
 	public String getCover() {
 		return cover;
 	}
@@ -99,6 +141,18 @@ public class User {
 	}
 	public void setPosts(List<Posts> posts) {
 		this.posts = posts;
+	}
+	public List<Friends> getFriends1() {
+		return friend1;
+	}
+	public void setFriends1(List<Friends> friends1) {
+		this.friend1 = friends1;
+	}
+	public List<Friends> getFriends2() {
+		return friend2;
+	}
+	public void setFriends2(List<Friends> friend2) {
+		this.friend2 = friend2;
 	}
 	
 }

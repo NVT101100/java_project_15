@@ -16,13 +16,12 @@
 <link rel="stylesheet" th:href="@{/css/base.css}">
 <link rel="stylesheet" th:href="@{/css/main.css}">
 <link rel="stylesheet" th:href="@{/css/profile.css}">
-	<script th:src="@{https://code.jquery.com/jquery-3.6.0.js}"></script>
-
+<script th:src="@{https://code.jquery.com/jquery-3.6.0.js}"></script>
 </head>
-
 <body>
 
-	<div class="app" th:object="${currentUser}">
+	<div class="app" th:object="${currentUser}"
+		onmousedown="closeSetting()">
 		<div class="app-grid">
 			<header class="header">
 				<div class="header-grid">
@@ -36,10 +35,21 @@
 							</div>
 							<input type="text" id="search-input"
 								class="header-left__search-input" placeholder="Tìm kiếm bạn bè">
-
+							<ul class="header-left__search-history" id="listSearch">
+								<li class="header-left__search-history-item" id="itemSearch">
+									<img src="" alt="" class="header-left__search-history-avt">
+									<span>Lịch sử tìm kiếm</span>
+									<div class="header-search-icon">
+										<i class="fas fa-times"></i>
+									</div>
+								</li>
+							</ul>
 						</div>
 					</div>
 					<ul class="header-right">
+						<li class="header-right__item"><img
+							th:src="@{'data:image/png;base64,'+${currentUser.profile}}"
+							alt="" class="header-profile__img avt"></li>
 						<li class="header-right__item"><a aria-current="page"
 							class="active" href="/"><svg stroke="currentColor"
 									fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024"
@@ -48,7 +58,7 @@
 										d="M946.5 505L534.6 93.4a31.93 31.93 0 0 0-45.2 0L77.5 505c-12 12-18.8 28.3-18.8 45.3 0 35.3 28.7 64 64 64h43.4V908c0 17.7 14.3 32 32 32H448V716h112v224h265.9c17.7 0 32-14.3 32-32V614.3h43.4c17 0 33.3-6.7 45.3-18.8 24.9-25 24.9-65.5-.1-90.5z">
 									</path>
 								</svg> </a></li>
-						<li class="header-right__item"><svg stroke="currentColor"
+						<li class="header-right__item" onclick="reDirectMessage()"><svg stroke="currentColor"
 								fill="currentColor" stroke-width="0" viewBox="0 0 24 24"
 								height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
 								<g>
@@ -58,38 +68,106 @@
 									</path>
 								</g>
 							</svg></li>
-						<li class="header-right__item"><i
-							class="fas fa-bell header-right__item-notify"></i></li>
-						<li class="header-right__item"><img
-							th:src="@{'data:image/png;base64,'+${currentUser.profile}}" alt=""
-							class="header-profile__img avt"></li>
+						<li class="header-right__item"><span
+							class="header-right__item-count" id="count"
+							th:if="${nonHasntSeen}" th:text="${nonHasntSeen}"></span> <i
+							class="fas fa-bell"
+							th:onclick="|showNotify('${currentUser.user_id}')|"></i>
+							<div class="header-right__item-more" id="listNotify">
+								<div class="notify-heading">
+									<h2 class="notify-heading__text">Thông báo</h2>
+								</div>
+
+								<div class="notify-content">
+									<div class="notify-content__new">
+										<div class="notify-content__new-head">
+											<ul class="notify-content__new-list"
+												th:each="notify:${notifies}">
+												<li class="notify-content__item"><img
+													th:src="@{'data:image/png;base64,'+${notify.nontifications.sender.profile}}"
+													alt="" class="notify-content__item-avatar">
+													<div class="notify-content__item-content">
+														<div class="notify-content__item-content-text">
+															<a
+																th:text="${notify.nontifications.sender.fullname}+${notify.nontifications.text}">
+															</a>
+														</div>
+														<p class=" notify-content__item-time"
+															th:text="${notify.time}"></p>
+													</div></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div></li>
+						<li class="header-right__item"><i class="fas fa-sort-down"></i>
+							<ul class="setting__list">
+								<li class="setting__item"><a th:href="@{/logout}">
+										<div class="setting__item-img">
+											<i class="fas fa-sign-out-alt"></i>
+										</div>
+										<p class="setting__item-content">Đăng xuất</p>
+								</a></li>
+							</ul></li>
 					</ul>
 				</div>
 			</header>
 
 			<div class="container">
-				<div class="container-left__favorite">
+				<div class="iner-left__favorite">
 					<ul class="favorite-list">
 						<li class="favorite-item nav-wall"><img
-							th:src="@{'data:image/png;base64,'+${currentUser.profile}}" alt=""
-							class="avt favorite-item__img">
-							 <a style="text-decoration:none" class="favorite-item__text full-name" th:text="${currentUser.fullname}" th:href="@{'/user/profile/'+${currentUser.user_id}}"></a>
-						</li>
-						<li class="favorite-item"><img
-							th:src="@{/img/item-fav-1.png}" alt="" class="favorite-item__img">
-							<span class="favorite-item__text">Bạn bè</span></li>
-						<li class="favorite-item"><img
-							th:src="@{/img/item-fav-3.png}" alt="" class="favorite-item__img">
-							<span class="favorite-item__text">Messenger</span></li>
+							th:src="@{'data:image/png;base64,'+${currentUser.profile}}"
+							alt="" class="avt favorite-item__img"> <a
+							style="text-decoration: none"
+							class="favorite-item__text full-name"
+							th:text="${currentUser.fullname}"
+							th:href="@{'/user/profile/'+${currentUser.user_id}}"></a></li>
 					</ul>
+					<div class="friend-content">
+						<span class="friend-content__item-content-text"> Lời mời
+							kết bạn</span>
+						<div class="frient-content__new">
+							<ul class="friend-content__new-list"
+								th:each="nontification: ${nontifications}">
+								<li class="friend-content__item"
+									th:id="'non'+${nontification.nontifications.non_id}"><img
+									th:src="@{'data:image/png;base64,'+${nontification.nontifications.sender.profile}}"
+									alt="" class="friend-content__item-avatar">
+									<div class="friend-content__item-content">
+										<a class="friend-content__item-content-text"
+											style="text-decoration: none"
+											th:text="${nontification.nontifications.sender.fullname} +' đã gửi cho bạn lời mời kết bạn'"
+											th:href="@{'/user/profile/'+${nontification.nontifications.sender.user_id}}">
+										</a><span class="friend-content__item-content-text"
+											th:text=${nontification.time}></span>
+										<button class="friend-accept"
+											th:onclick="|acceptFriend('${nontification.nontifications.sender.user_id}','${nontification.nontifications.receiver.user_id}','${nontification.nontifications.non_id}')|">Chấp
+											nhận</button>
+										<button class="friend-remove"
+											th:onclick="|refuseFriend('${nontification.nontifications.sender.user_id}','${nontification.nontifications.receiver.user_id}','${nontification.nontifications.non_id}')|">Xóa</button>
+									</div></li>
+							</ul>
+						</div>
+					</div>
+					<br>
+					<br>
+					<div class="friend-content">
+						<span class="friend-content__item-content-text"> Kết quả
+							tìm kiếm</span>
+						<div class="frient-content__new">
+							<ul class="friend-content__new-list" id="friendList">
+							</ul>
+						</div>
+					</div>
 				</div>
 				<div class="container-main">
 					<div class="container-posts">
 						<div class="posts__new-post">
-							<img th:src="@{'data:image/png;base64,'+${currentUser.profile}}" alt=""
-								class="avt posts__new-post-img nav-wall">
-							<button type="button"  class="new-post-btn posts__new-post-btn" id="newPost" onclick="showBox()">
-								Bạn đang nghĩ gì thế ?</button>
+							<img th:src="@{'data:image/png;base64,'+${currentUser.profile}}"
+								alt="" class="avt posts__new-post-img nav-wall">
+							<button type="button" class="new-post-btn posts__new-post-btn"
+								id="newPost" onclick="showBox()">Bạn đang nghĩ gì thế ?</button>
 						</div>
 						<ul class="post__action">
 							<li class="post__action-item"><i
@@ -103,43 +181,104 @@
 								class="post__action-item-text">Cảm xúc/Hoạt động</span></li>
 						</ul>
 					</div>
-
-					<div class="container-newsfeed-list" th:each="post : ${posts}" >
-						<div class="newsfeed">
+					<div class="container-newsfeed-list" th:each="post : ${posts}">
+						<div class="newsfeed" th:id="'post'+${post.Posts.post_id}">
 							<div class="newsfeed__info">
 								<div class="newsfeed__info-profile">
-									<img class="header-profile__img avt"
-										th:src="@{'data:image/png;base64,'+${currentUser.profile}}">
+									<img class="newsfeed__-profile-avt"
+										th:src="@{'data:image/png;base64,'+${post.Posts.userPost.profile}}">
 									<div class="newsfeed__info-profile-more">
-										<span class="newsfeed__info-name checked" th:text="${post.userPost.fullname}"></span>
-										<div class="newsfeed__info-time">
-											10 phút trước <i class="fas fa-globe-europe"></i>
+										<span class="newsfeed__info-name checked"
+											th:text="${post.Posts.userPost.fullname}"></span>
+										<div class="newsfeed__info-time" th:text="${post.time}">
+											<i class="fas fa-globe-europe"></i>
 										</div>
 									</div>
 								</div>
+								<div class="newsfeed__info-setting" th:if="${post.isYourPost}">
+									<div class="newsfeed__info-setting-icon"
+										th:onclick="|showSetting('${post.Posts.post_id}')|">
+										<i class="fas fa-ellipsis-h"></i>
+									</div>
+									<ul class="newsfeed__info-setting-list"
+										th:id="'settingList'+${post.Posts.post_id}">
+										<li class="newsfeed__info-setting-item"
+											th:onmousedown="|deletePost('${post.Posts.post_id}')|">
+											<div class="newsfeed__info-setting-item__img">
+												<i class="fas fa-trash-alt"></i>
+											</div>
+											<div class="newsfeed__info-setting-item__content">
+												<p class="newsfeed__info-setting-item__text">Xóa bài
+													viết</p>
+											</div>
+										</li>
+										<li class="newsfeed__info-setting-item"
+											th:onmousedown="|updatePost('${post.Posts.post_id}')|">
+											<div class="newsfeed__info-setting-item__img">
+												<i class="fas fa-history"></i>
+											</div>
+											<div class="newsfeed__info-setting-item__content">
+												<p class="newsfeed__info-setting-item__text">Chỉnh sửa
+													bài viết</p>
+											</div>
+										</li>
+									</ul>
+								</div>
 							</div>
 							<div class="newsfeed__content">
-								<p class="newsfeed__content-text" th:text="${post.status}"></p>
-								<p id = "imageCode" class="newsfeed__content-text"></p>
-								<img th:src="@{'data:image/png;base64,'+${post.image}}" alt="" class="newsfeed__content-img">
+								<p class="newsfeed__content-text" th:text="${post.Posts.status}"></p>
+								<img th:src="@{'data:image/png;base64,'+${post.Posts.image}}"
+									alt="" class="newsfeed__content-img">
 							</div>
 							<div class="newsfeed__respond-react">
-								<div class="newsfeed__respond-react-icon">
-									<i class="far fa-heart"></i>
+								<div class="newsfeed__respond-react-icon"
+									th:id="'heartPost'+${post.Posts.post_id}"
+									th:onclick="|handleHeart('${post.Posts.post_id}','${currentUser.user_id}')|"
+									th:classappend="${post.isLiked}?'active':''">
+									<i class="far fa-heart"></i> <i class="fas fa-heart"></i>
 								</div>
-								<span class="newsfeed__respond-react-total">1 lượt thích</span>
-								<span class="newsfeed__respond-right">Bình luận</span>
+								<span class="newsfeed__respond-react-total"
+									th:id="'numlike'+${post.Posts.post_id}"
+									th:text="${post.countLike}+' Lượt thích'"></span> <span
+									class="newsfeed__respond-right"
+									th:id="'numcomment'+${post.Posts.post_id}"
+									th:onclick="|hiddenAndShowComment('${post.Posts.post_id}')|"
+									th:text="${post.countComment}+' Bình luận'"></span>
 							</div>
 							<div class="newsfeed__comment">
 								<div class="newsfeed__comment-user">
-									<img th:src="@{'data:image/png;base64,'+${currentUser.profile}}" alt=""
-										class="header-profile__img avt">
+									<img
+										th:src="@{'data:image/png;base64,'+${currentUser.profile}}"
+										alt="" class="newsfeed__comment-img">
 									<div class="newsfeed__comment-box">
 										<input type="text" placeholder="Viết bình luận ..."
-											class="newsfeed__comment-input">
+											th:id="'commentText'+${post.Posts.post_id}" class="newsfeed__comment-input"
+											th:onkeypress="|checkIfEnter(event,'${post.Posts.post_id}')|">
 										<div class="newsfeed__comment-box-right">
-											<div class="newsfeed__comment-box-icon">
-												<i class="fas fa-camera"></i>
+											<div class="newsfeed__comment-box-icon"></div>
+										</div>
+									</div>
+								</div>
+								<div class="newsfeed__commented-box" th:id="'commentedBox'+${post.Posts.post_id}"
+									style="display: none;">
+									<div class="commented-box" th:each="comment:${post.comments}">
+										<div class="commented-box__item" th:id="'commentedBoxItem'+${post.Posts.post_id}">
+											<div class="commented-box__item-user">
+												<div class="commented-box__item-avatar">
+													<img
+														th:src="@{'data:image/png;base64,'+${comment.user.profile}}"
+														alt="">
+												</div>
+											</div>
+											<div class="commented-box__item-info">
+												<div class="wrap">
+													<div class="comented-box__item-content">
+														<div class="comented-box__item-name"
+															th:text="${comment.user.fullname}"></div>
+														<div class="comented-box__item-text"
+															th:text="${comment.text}"></div>
+													</div>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -157,57 +296,67 @@
 								<i class="fal fa-search"></i>
 							</div>
 						</div>
-						<ul class="container-right__connect-list" th:each="friend: ${friends}">
+						<ul class="container-right__connect-list"
+							th:each="friend: ${friends}">
 							<li class="container-right__connect-item">
 								<div class="container-right__connect-item-avatar">
-									<img th:src="@{'data:image/png;base64,'+${friend.profile}}" alt=""
-										class="container-right__connect-item-img">
-								</div> <a style="text-decoration:none" class="container-right__connect-item-name" th:text="${friend.fullname}"></a>
+									<img th:src="@{'data:image/png;base64,'+${friend.image}}"
+										alt="" class="container-right__connect-item-img">
+								</div> <a style="text-decoration: none"
+								class="container-right__connect-item-name"
+								th:text="${friend.fullname}"
+								th:href="@{'/user/profile/'+${friend.id}}"></a>
 							</li>
 						</ul>
 					</div>
 				</div>
 			</div>
-			<div class="overplay" id = "overplay" style="display: none;" th:object="${currentUser}">
+			<div class="overplay" id="overplay" style="display: none;"
+				th:object="${currentUser}">
 				<div class="overplay-body">
 					<div class="post-box">
 						<div class="post-box__head">
-							<h3 class="post-box__head-text">Tạo bài viết</h3>
-							<span class="post-box__head-close" onclick="closeOverplay()"> <i
-								class="fas fa-times"></i>
+							<h3 class="post-box__head-text" id="postTitle">Tạo bài viết</h3>
+							<span class="post-box__head-close" onclick="closeOverplay()">
+								<i class="fas fa-times"></i>
 							</span>
 						</div>
 						<div class="post-box__main">
 							<div class="post-box__info">
-								<img th:src="@{'data:image/png;base64,'+${currentUser.profile}}" alt=""
-									class="post-box__avatar">
+								<img th:src="@{'data:image/png;base64,'+${currentUser.profile}}"
+									alt="" class="post-box__avatar">
 								<div class="post-box__info-info">
-									<p class="post-box__info-name" th:text="${currentUser.fullname}"></p>
-									<span id="userId" style="display:none;" th:text="${currentUser.user_id}"></span>
+									<p class="post-box__info-name"
+										th:text="${currentUser.fullname}"></p>
+									<span id="userId" style="display: none;"
+										th:text="${currentUser.user_id}"></span>
 								</div>
 							</div>
 							<div class="post-box__content">
-								<textarea id = "postContent" placeholder="Bạn đang nghĩ gì thế ?" oninput="checkSubmit()"
-									class="post-box__content-textarea"></textarea>
-								<img id = "uploadImage" alt="" width="468" height="468">
+								<textarea id="postContent" placeholder="Bạn đang nghĩ gì thế ?"
+									oninput="checkSubmit()" class="post-box__content-textarea"></textarea>
+								<img id="uploadImage" alt="" width="468" height="468">
 							</div>
 							<div class="post-box__add">
 								<div class="post-box__add-head">Thêm vào bài viết</div>
 								<div class="post-box__add-more">
-									<label class="post-box__add-icon">
-										<i style="color: #45bd62;" class="fas fa-images"></i>
-										<input type="file" id = "postImage" class="input-upload" style="display:none;">
+									<label class="post-box__add-icon"> <i
+										style="color: #45bd62;" class="fas fa-images"></i> <input
+										type="file" id="postImage" class="input-upload"
+										style="display: none;">
 									</label>
 								</div>
 							</div>
-							<button class="post-box__btn btn-active" id = "postBtn" type="submit" onclick="postStatus()">Đăng</button>
+							<button class="post-box__btn btn-active" id="postBtn"
+								type="submit" onclick="postStatus()">Đăng</button>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<script th:inline="javascript" type="text/javascript" th:src="@{/js/app.js}"></script>
+	<script th:inline="javascript" type="text/javascript"
+		th:src="@{/js/app.js}"></script>
 </body>
 
 </html>

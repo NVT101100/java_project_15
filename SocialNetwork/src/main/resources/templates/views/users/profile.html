@@ -3,71 +3,77 @@
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 
-<head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Hưng Dương</title>
-	<link th:href="@{https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap}"
-		rel="stylesheet" />
-	<link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.css}" />
-	<script th:src="@{https://code.jquery.com/jquery-3.6.0.js}"></script>
-	<link rel="stylesheet" th:href="@{/css/base.css}" />
-	<link rel="stylesheet" th:href="@{/css/main.css}" />
-	<link rel="stylesheet" th:href="@{/css/profile.css}" />
-	<script type="text/javascript" th:src = "@{/js/profile.js}"></script>
+<head th:object="${currentUser}">
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title th:text="${currentUser.fullname}"></title>
+<link
+	th:href="@{https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap}"
+	rel="stylesheet" />
+<link rel="stylesheet"
+	th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.css}" />
+<script th:src="@{https://code.jquery.com/jquery-3.6.0.js}"></script>
+<link rel="stylesheet" th:href="@{/css/base.css}" />
+<link rel="stylesheet" th:href="@{/css/main.css}" />
+<link th:inline="javascript" rel="stylesheet"
+	th:href="@{/css/profile.css}" />
 </head>
 
 <body>
-	<div class="my-wall" th:object="${currentUser}"> 
-	<span id="userId" style="display: none;" th:text="${currentUser.user_id}"></span>
+	<div class="my-wall">
 		<div class="my-wall__head">
 			<div class="my-wall__top">
 				<div class="my-wall__top-bg--big">
 					<div class="my-wall__top-bg">
-						<img id = "coverImage" th:src="@{'data:image/png;base64,'+${currentUser.cover}}" alt="" class="my-wall__top-bg-img">
-						<div class="my-wall__top-bg__edit" onclick="editCoverImage()">
-							<i class="fas fa-camera my-wall__top-bg__edit-icon" ></i>
-							<div class="my-wall__top-bg__edit-text">
-								Chỉnh sửa ảnh bìa
-							</div>
+						<img id="coverImage"
+							th:src="@{'data:image/png;base64,'+${currentUser.cover}}" alt=""
+							class="my-wall__top-bg-img">
+						<div class="my-wall__top-bg__edit" th:onclick="|editCoverImage('${currentUser.user_id}')|"
+							th:style="${isAuth}?'display:flex;':'display:none;'">
+							<i class="fas fa-camera my-wall__top-bg__edit-icon"></i>
+							<div class="my-wall__top-bg__edit-text">Chỉnh sửa ảnh bìa</div>
 						</div>
 					</div>
 					<div class="my-wall__top-bg-avatar">
-						<img th:src="@{'data:image/png;base64,'+${currentUser.profile}}" id = "profileImage" alt="" class="my-wall__top-bg-avatar__img">
-						<div class="my-wall__top-bg-avatar__edit" onclick="editProfileImage()">
-							<i class="fas fa-camera my-wall__top-bg-avatar__edit-icon"  >
-							</i>
+						<img th:src="@{'data:image/png;base64,'+${currentUser.profile}}"
+							id="profileImage" alt="" class="my-wall__top-bg-avatar__img">
+						<div class="my-wall__top-bg-avatar__edit"
+							th:onclick="|editProfileImage('${currentUser.user_id}')|"
+							th:style="${isAuth}?'display:block;':'display:none;'">
+							<i class="fas fa-camera my-wall__top-bg-avatar__edit-icon"> </i>
 						</div>
 					</div>
 				</div>
 				<div class="my-wall__top-info">
-					<p class="my-wall__top-info-name full-name" th:text="${currentUser.fullname}">
-					</p>
+					<p class="my-wall__top-info-name full-name"
+						th:text="${currentUser.fullname}"></p>
 				</div>
 			</div>
 		</div>
 		<div class="my-wall__head-more">
 			<ul class="my-wall__head-more-list">
 				<li class="my-wall__head-more-item">
-					<div class="my-wall__head-more-item__title">
-						Bài viết
-					</div>
+					<div class="my-wall__head-more-item__title">Bài viết</div>
 				</li>
 				<li class="my-wall__head-more-item">
 					<div class="my-wall__head-more-item__title">
-						Bạn bè
-						<span>
-							254
-						</span>
+						Bạn bè <span> 254 </span>
 					</div>
 				</li>
 				<li class="my-wall__head-more-item">
-					<div class="my-wall__head-more-item__title">
-						Ảnh
-					</div>
+					<div class="my-wall__head-more-item__title">Ảnh</div>
 				</li>
 			</ul>
+			<button class="my-wall__head-more-btn"
+				th:classappend="${isfriend}? '':'btn-add'" id="btnFriend"
+				th:style="${isAuth}?'display:none;':'display:block;'"
+				th:onclick="|handleFriend('${currentUser.user_id}')|">
+				<i class="fas fa-user-plus" id="iconAdd"
+					th:text="${isWaiting}?'  Hủy lời mời':' Bạn bè'"
+					th:if="${isfriend}"></i> <i class="fas fa-user-plus" id="iconAdd"
+					th:unless="${isfriend}"> Thêm bạn bè</i>
+			</button>
 		</div>
 		<div class="my-wall__main">
 			<div class="my-wall__main-left">
@@ -75,103 +81,130 @@
 					<div class="main-left__friends-head">
 						<div class="main-left__heading">
 							Bạn bè
-							<div class="main-left__heading-sub">
-								425 người bạn
-							</div>
+							<div class="main-left__heading-sub"
+								th:text="${numFriend}+' người bạn'"></div>
 						</div>
 					</div>
-					<ul class="main-left__friends-list">
+					<ul class="main-left__friends-list" th:each="friend: ${friends}">
 						<li class="main-left__friends-item">
 							<div class="main-left__friends-item-avatar">
-								<img th:src="@{/img/user_1.jpg}" alt="" class="imgmain-left__friends-img">
+								<img th:src="@{'data:image/png;base64,'+${friend.image}}" alt=""
+									class="imgmain-left__friends-img">
 							</div>
-							<div class="main-left__friends-item-text">
-								Nguyễn Lê Kim Ngân
-							</div>
-						</li>
-						<li class="main-left__friends-item">
-							<div class="main-left__friends-item-avatar">
-								<img th:src="@{/img/user_2.jpg}" alt="" class="imgmain-left__friends-img">
-							</div>
-							<div class="main-left__friends-item-text">
-								Ngọc Nhã
-							</div>
-						</li>
-						<li class="main-left__friends-item">
-							<div class="main-left__friends-item-avatar">
-								<img src="img/user_3.jpg" alt="" class="imgmain-left__friends-img">
-							</div>
-							<div class="main-left__friends-item-text">
-								Huệ Nguyễn
-							</div>
-						</li>
-						<li class="main-left__friends-item">
-							<div class="main-left__friends-item-avatar">
-								<img src="img/user_4.jpg" alt="" class="imgmain-left__friends-img">
-							</div>
-							<div class="main-left__friends-item-text">
-								Hữu Ân
-							</div>
+							<div class="main-left__friends-item-text"
+								th:text="${friend.fullname}"></div>
 						</li>
 					</ul>
 				</div>
 			</div>
 			<div class="my-wall__main-right">
-				<div class="main-right__posts">
-					<div class="posts__new-post">
-						<img th:src="@{/img/profile.jpg}" alt="" class="posts__new-post-img">
-						<button class="new-post-btn posts__new-post-btn">Bạn đang nghĩ gì thế ?</button>
-					</div>
-					<ul class="post__action">
-						<li class="post__action-item">
-							<i class="fas fa-video post__action-item-icon"></i>
-							<span class="post__action-item-text">Video trực tiếp</span>
-						</li>
-						<li class="post__action-item uploadfile single">
-							<i class="fas fa-images post__action-item-icon"></i>
-							<span class="post__action-item-text">Ảnh/Video</span>
-						</li>
-						<li class="post__action-item">
-							<i class="far fa-laugh post__action-item-icon"></i>
-							<span class="post__action-item-text">Cảm xúc/Hoạt động</span>
-						</li>
-					</ul>
-				</div>
-				<div class="main-right__newsfeed">
-					<div class="newsfeed">
+				<div class="main-right__newsfeed" th:each="post: ${posts}">
+					<div class="newsfeed" th:id="'post'+${post.Posts.post_id}">
 						<div class="newsfeed__info">
 							<div class="newsfeed__info-profile">
-								<img class="newsfeed__-profile-avt" th:src="@{img/profile.jpg}">
+								<img class="newsfeed__-profile-avt"
+									th:src="@{'data:image/png;base64,'+${post.Posts.userPost.profile}}">
 								<div class="newsfeed__info-profile-more">
-									<span class="newsfeed__info-name checked">
-										Hưng Dương
-									</span>
-									<div class="newsfeed__info-time">
-										10 phút trước
+									<span class="newsfeed__info-name checked"
+										th:text="${post.Posts.userPost.fullname}"></span>
+									<div class="newsfeed__info-time" th:text=${post.time}>
 										<i class="fas fa-globe-europe"></i>
 									</div>
 								</div>
 							</div>
+							<div class="newsfeed__info-setting" th:if="${post.isYourPost}">
+								<div class="newsfeed__info-setting-icon"
+									th:onclick="|showSetting('${post.Posts.post_id}')|">
+									<i class="fas fa-ellipsis-h"></i>
+								</div>
+								<ul class="newsfeed__info-setting-list"
+									th:id="'settingList'+${post.Posts.post_id}">
+									<li class="newsfeed__info-setting-item"
+										th:onmousedown="|deletePost('${post.Posts.post_id}')|">
+										<div class="newsfeed__info-setting-item__img">
+											<i class="fas fa-trash-alt"></i>
+										</div>
+										<div class="newsfeed__info-setting-item__content">
+											<p class="newsfeed__info-setting-item__text">Xóa bài viết</p>
+										</div>
+									</li>
+									<li class="newsfeed__info-setting-item"
+										th:onmousedown="|updatePost('${post.Posts.post_id}')|">
+										<div class="newsfeed__info-setting-item__img">
+											<i class="fas fa-history"></i>
+										</div>
+										<div class="newsfeed__info-setting-item__content">
+											<p class="newsfeed__info-setting-item__text">Chỉnh sửa
+												bài viết</p>
+										</div>
+									</li>
+								</ul>
+							</div>
 						</div>
 						<div class="newsfeed__content">
-							<p class="newsfeed__content-text">
-								Hưng Dương vừa cập nhật ảnh đại diện của "CÔ ẤY"
-							</p>
-							<img src="img/user_1.jpg" alt="" class="newsfeed__content-img">
+							<p class="newsfeed__content-text" th:text="${post.Posts.status}"></p>
+							<img th:src="@{'data:image/png;base64,'+${post.Posts.image}}"
+								alt="" class="newsfeed__content-img">
 						</div>
 						<div class="newsfeed__respond-react">
-							<div class="newsfeed__respond-react-icon">
-								<i class="far fa-heart"></i>
+							<div class="newsfeed__respond-react-icon"
+								th:id="'heartPost'+${post.Posts.post_id}"
+								th:onclick="|handleHeart('${post.Posts.post_id}','${currentUser.user_id}')|"
+								th:classappend="${post.isLiked}?'active':''">
+								<i class="far fa-heart"></i> <i class="fas fa-heart"></i>
 							</div>
-							<span class="newsfeed__respond-react-total">1 like</span>
-
-							<span class="newsfeed__respond-right">Bình luận</span>
+							<span class="newsfeed__respond-react-total"
+								th:id="'numlike'+${post.Posts.post_id}"
+								th:text="${post.countLike}+' Lượt thích'"></span> <span
+								class="newsfeed__respond-right" th:onclick="|hiddenAndShowComment('${post.Posts.post_id}')|"
+								th:id="'numcomment'+${post.Posts.post_id}"
+								th:text="${post.countComment}+' Bình luận'"></span>
+						</div>
+						<div class="newsfeed__comment">
+							<div class="newsfeed__comment-user">
+								<img th:src="@{'data:image/png;base64,'+${currentUser.profile}}"
+									alt="" class="newsfeed__comment-img">
+								<div class="newsfeed__comment-box">
+									<input type="text" placeholder="Viết bình luận ..."
+										th:id="'commentText'+${post.Posts.post_id}" class="newsfeed__comment-input"
+										th:onkeypress="|checkIfEnter(event,'${post.Posts.post_id}')|">
+									<div class="newsfeed__comment-box-right">
+										<div class="newsfeed__comment-box-icon"></div>
+									</div>
+								</div>
+							</div>
+							<div class="newsfeed__commented-box" th:id="'commentedBox'+${post.Posts.post_id}"
+								style="display: none;">
+								<div class="commented-box" th:each="comment:${post.comments}">
+									<div class="commented-box__item" th:id="'commentedBoxItem'+${post.Posts.post_id}">
+										<div class="commented-box__item-user">
+											<div class="commented-box__item-avatar">
+												<img
+													th:src="@{'data:image/png;base64,'+${comment.user.profile}}"
+													alt="">
+											</div>
+										</div>
+										<div class="commented-box__item-info">
+											<div class="wrap">
+												<div class="comented-box__item-content">
+													<div class="comented-box__item-name"
+														th:text="${comment.user.fullname}"></div>
+													<div class="comented-box__item-text"
+														th:text="${comment.text}"></div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<script type="text/javascript" th:src="@{/js/profile.js}"></script>
+	<script type="text/javascript" th:src="@{/js/app.js}"></script>
 </body>
 
 </html>

@@ -1,5 +1,9 @@
 package com.SocialNetwork;
 
+import java.util.TimeZone;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -23,5 +27,11 @@ public class SocialNetworkApplication {
 			}
 		};
 	}
+	
+	@PostConstruct
+    public void init(){
+      // Setting Spring Boot SetTimeZone
+      TimeZone.setDefault(TimeZone.getTimeZone("GMT+7"));
+    }
 
 }

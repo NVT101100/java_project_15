@@ -1,10 +1,20 @@
 package com.SocialNetwork.Sheet;
 
+import java.sql.Date;
+import java.sql.Time;
+
 public class PostSheet {
 	private byte[] image;
 	private String status;
-	private String date;
-	private String time;
+	private Date date;
+	private Time time;
+	private boolean isliked;
+	public boolean isIsliked() {
+		return isliked;
+	}
+	public void setIsliked(boolean isliked) {
+		this.isliked = isliked;
+	}
 	public byte[] getImage() {
 		return image;
 	}
@@ -17,16 +27,16 @@ public class PostSheet {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
-	public String getTime() {
+	public Time getTime() {
 		return time;
 	}
-	public void setTime(String time) {
+	public void setTime(Time time) {
 		this.time = time;
 	}
 }

@@ -40,7 +40,7 @@ public class GetDefaultProfileImage {
 	
 	public String setDefaultCover() {
 		try {
-			file = ResourceUtils.getFile("classpath:defaultImage/default-cover.jpg");
+			file = ResourceUtils.getFile("classpath:defaultImage/default-cover.png");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

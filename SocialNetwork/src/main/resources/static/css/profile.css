@@ -395,3 +395,44 @@
     background-color: #ccc;
     cursor: pointer;
 }
+.my-wall__head-more-btn {
+    margin: 0px 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    font-weight: 500;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+.my-wall__head-more-btn:hover {
+    cursor: pointer;
+    filter: brightness(95%);
+}
+.btn-add {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+.newsfeed__respond-react-icon {
+    margin: 0 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+}
+.newsfeed__respond-react-icon:hover {
+    background-color: #ddd;
+}
+.newsfeed__respond-react-icon.active i {
+    color: red;
+}
+.newsfeed__respond-react-icon.active .far.fa-heart,
+.newsfeed__respond-react-icon .fas.fa-heart{
+    display: none;
+}
+
+.newsfeed__respond-react-icon.active .fas.fa-heart{
+    display: inline-block;
+}

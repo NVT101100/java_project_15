@@ -1,9 +1,8 @@
-function editProfileImage(){
+function editProfileImage(userId){
 	 let input = document.createElement("input");
 	 var profileImage = document.getElementById("profileImage");
 	 var formData = new FormData();
 	 var reader = new FileReader();
-	 var userId = document.getElementById("userId").innerText;
 	 var src;
 	 input.type = "file";
 	 input.name = "imagefile";
@@ -31,12 +30,11 @@ function editProfileImage(){
 	 input.click();
 }
 
-function editCoverImage(){
+function editCoverImage(userId){
 	 let input = document.createElement("input");
 	 var coverImage = document.getElementById("coverImage");
 	 var formData = new FormData();
 	 var reader = new FileReader();
-	 var userId = document.getElementById("userId").innerText;
 	 var src;
 	 input.type = "file";
 	 input.name = "imagefile";
@@ -62,4 +60,42 @@ function editCoverImage(){
         });
 	 };
 	 input.click();
+}
+
+var btnFriend = document.getElementById("btnFriend")
+var icon = document.getElementById("iconAdd")
+function handleFriend (userId) {
+	if(btnFriend.classList.value == "my-wall__head-more-btn"&&btnFriend.innerHTML.includes("Hủy lời mời")) {
+		$.ajax({
+	       	 type : "POST",
+	       	 url : "/SocialNetwork/user/addfriend/"+userId,
+	       	 data : "cancel",
+	       	 processData: false,
+	       	 contentType: false,
+	       	 success : function(data) {
+	       		 alert(data);
+	       		btnFriend.classList.add("btn-add")
+	    		icon.innerHTML = "Thêm bạn bè"
+	       	 },
+	       	 error : function(e) {
+	       		 alert("Đã xảy ra lỗi");
+	       	 }
+	    });
+	} else if(btnFriend.innerHTML.includes("Thêm bạn bè")) {
+		$.ajax({
+	       	 type : "POST",
+	       	 url : "/SocialNetwork/user/addfriend/"+userId,
+	       	 data : "add",
+	       	 processData: false,
+	       	 contentType: false,
+	       	 success : function(data) {
+	       		 alert(data);
+	       		btnFriend.classList.remove("btn-add")
+	    		icon.innerHTML = "Hủy lời mời"
+	       	 },
+	       	 error : function(e) {
+	       		 alert("Đã xảy ra lỗi");
+	       	 }
+	    });
+	}
 }
