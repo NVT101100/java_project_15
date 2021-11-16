@@ -30,7 +30,7 @@ function showBox() {
 	showOverplay()
 	checkSubmit()
 }
-function postStatus(){
+function postStatus(userId){
 	var formdata = {};
 	formdata["image"] = filearray;
 	formdata["status"]= textAreaBox.value;
@@ -308,5 +308,5 @@ function createNewComment(postId,data){
 }
 
 function reDirectMessage(){
-	window.location.href = "/SocialNetwork/user/message/";
+	window.location.href = "/SocialNetwork/user/messagePage";
 }

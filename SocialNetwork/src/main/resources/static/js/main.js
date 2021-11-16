@@ -48,10 +48,5 @@ document.addEventListener("DOMContentLoaded", () => {
 			}, "Mật khẩu nhập lại không chính xác"),
 			Validator.isRequired('input[name=gender]'),
 		],
-		onSubmit: data => {
-			let dataUser = JSON.parse(localStorage.getItem('dataUser'))
-			localStorage.setItem('dataUser', JSON.stringify(dataUser))
-			window.location = 'login.html'
-		}
 	})
 })

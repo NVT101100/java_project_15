@@ -348,7 +348,7 @@
 								</div>
 							</div>
 							<button class="post-box__btn btn-active" id="postBtn"
-								type="submit" onclick="postStatus()">Đăng</button>
+								type="submit" th:onclick="|postStatus('${currentUser.user_id}')|">Đăng</button>
 						</div>
 					</div>
 				</div>

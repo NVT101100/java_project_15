@@ -55,6 +55,26 @@ public class User {
 	@JsonManagedReference
 	private List<Nontifications> nons1;
 	
+	@OneToMany(mappedBy="sender",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+	@JsonManagedReference
+	public List<GroupChat> sendMessage;
+	
+	@OneToMany(mappedBy="receiver",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+	@JsonManagedReference
+	public List<GroupChat> receiveMessage;
+	
+	public List<GroupChat> getSendMessage() {
+		return sendMessage;
+	}
+	public void setSendMessage(List<GroupChat> sendMessage) {
+		this.sendMessage = sendMessage;
+	}
+	public List<GroupChat> getReceiveMessage() {
+		return receiveMessage;
+	}
+	public void setReceiveMessage(List<GroupChat> receiveMessage) {
+		this.receiveMessage = receiveMessage;
+	}
 	public List<Nontifications> getNons1() {
 		return nons1;
 	}

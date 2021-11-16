@@ -1,29 +1,38 @@
 <!DOCTYPE html>
-<html lang="en"  xmlns="http://www.w3.org/1999/xhtml"
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 
 <head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Messenger | Facebook</title>
-	<link th:href="@{https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap}" rel="stylesheet">
-	<link rel="stylesheet" th:href="@{/css/base.css}">
-	<link rel="stylesheet" th:href="@{/css/mess.css}">
-	<link rel="stylesheet" th:href="@{https://pro.fontawesome.com/releases/v6.0.0-beta1/css/all.css}" />
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Messenger | Facebook</title>
+<link
+	th:href="@{https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap}"
+	rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/base.css}">
+<link rel="stylesheet" th:href="@{/css/mess.css}">
+<link rel="stylesheet"
+	th:href="@{https://pro.fontawesome.com/releases/v6.0.0-beta1/css/all.css}" />
+<script th:src="@{https://code.jquery.com/jquery-3.6.0.js}"></script>
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/mdui/dist/js/mdui.js}"></script>
 </head>
 
 <body>
-	<div class="app">
+	<audio id="myAudio">
+		<source th:src="@{/mp3/messenger_ios.mp3}" type="audio/mpeg">
+	</audio>
+	<div class="app" th:object="${currentUser}">
+		<span th:text="${currentUser.user_id}" id="userId"
+			style="display: none;"></span>
 		<div class="app-grid">
 			<div class="container">
 				<div class="container-left">
 					<div class="container-left__head">
 						<div class="container-left__head-top">
-							<div class="container-left__head-top-title">
-								Chat
-							</div>
+							<div class="container-left__head-top-title">Chat</div>
 							<div class="container-left__head-top-group">
 								<div class="container-left__head-group-btn">
 									<i class="far fa-ellipsis-h"></i>
@@ -44,25 +53,24 @@
 						</div>
 					</div>
 					<div class="container-left__body">
-						<ul class="container-left__list">
-							<li class="container-left__item">
+						<ul class="container-left__list" th:each="group:${groups}">
+							<li class="container-left__item"
+								th:onclick="|displayMain('${group.groupId}')|">
 								<div class="container-left__item-avatar">
-									<img src="img/user_1.jpg" alt="" class="container-left__item-avatar-img">
+									<img
+										th:src="@{'data:image/png;base64,'+${group.withUser.profile}}"
+										alt="" class="container-left__item-avatar-img"
+										th:id="'withUserProfile'+${group.groupId}">
 								</div>
 								<div class="container-left__item-info">
-									<div class="container-left__item-info-name">
-										Nguyễn Lê Kim Ngân
-									</div>
+									<div class="container-left__item-info-name"
+										th:text="${group.withUser.fullname}"></div>
 									<div class="container-left__item-info-sub">
-										<div class="container-left__item-info-last-mess">
-											Thôi bỏ đi
-										</div>
+										<div class="container-left__item-info-last-mess"
+											th:text="${group.lastMessage}"></div>
 										.
 										<div class="container-left__item-info-time">
-											<span>
-												1
-											</span>
-											giờ
+											<span th:text="${group.timeText}"> </span>
 										</div>
 									</div>
 								</div>
@@ -75,91 +83,24 @@
 									</div>
 								</div>
 							</li>
-							<li class="container-left__item active">
-								<div class="container-left__item-avatar">
-									<img src="img/user_2.jpg" alt="" class="container-left__item-avatar-img">
-								</div>
-								<div class="container-left__item-info">
-									<div class="container-left__item-info-name">
-										Ngọc Nhã
-									</div>
-									<div class="container-left__item-info-sub">
-										<div class="container-left__item-info-last-mess">
-											Ok m
-										</div>
-										·
-										<div class="container-left__item-info-time">
-											<span>
-												1
-											</span>
-											giờ
-										</div>
-									</div>
-								</div>
-							</li>
-							<li class="container-left__item active">
-								<div class="container-left__item-avatar">
-									<img src="img/user_3.jpg" alt="" class="container-left__item-avatar-img">
-								</div>
-								<div class="container-left__item-info">
-									<div class="container-left__item-info-name">
-										Huệ Nguyễn
-									</div>
-									<div class="container-left__item-info-sub">
-										<div class="container-left__item-info-last-mess">
-											Ok m
-										</div>
-										·
-										<div class="container-left__item-info-time">
-											<span>
-												2 ngày
-											</span>
-											giờ
-										</div>
-									</div>
-								</div>
-							</li>
-							<li class="container-left__item active">
-								<div class="container-left__item-avatar">
-									<img src="img/user_4.jpg" alt="" class="container-left__item-avatar-img">
-								</div>
-								<div class="container-left__item-info">
-									<div class="container-left__item-info-name">
-										Ân Hữu
-									</div>
-									<div class="container-left__item-info-sub">
-										<div class="container-left__item-info-last-mess">
-											Ok m
-										</div>
-										·
-										<div class="container-left__item-info-time">
-											<span>
-												10
-											</span>
-											giờ
-										</div>
-									</div>
-								</div>
-							</li>
 						</ul>
 					</div>
 				</div>
 
-				<div class="container-main">
+				<div th:id="'mainContainer'+${group.groupId}" class="container-main"
+					style="display: flex;" th:each="group:${groups}">
 					<div class="container-main__head">
 						<div class="container-main__head-left">
 							<div class="container-main__head-left-avt">
-								<img class="container-main__head-left-avt-img avt-mess" src="img/user_1.jpg"
+								<img class="container-main__head-left-avt-img avt-mess"
+									th:src="@{'data:image/png;base64,'+${group.withUser.profile}}"
 									alt="">
 							</div>
 							<div class="container-main__head-left-info">
-								<div class="container-main__head-left-info__name name-mess">
-									Nguyễn Lê Kim Ngân
-								</div>
+								<div class="container-main__head-left-info__name name-mess"
+									th:text="${group.withUser.fullname}"></div>
 								<div class="container-main__head-left-info-time online">
-									Hoạt động
-									<span>1</span>
-									giờ trước
+									<span th:text="${group.timeText}"></span>
 								</div>
 							</div>
 						</div>
@@ -170,108 +111,35 @@
 						</div>
 					</div>
 					<div class="container-main__body">
-						<ul class="container-main__list">
-							<li class="container-main__item isReaction">
+						<ul class="container-main__list"
+							th:id="'containerBody'+${group.groupId}">
+							<li class="container-main__item"
+								th:id="'containerMainItem'+${message.messageId}"
+								th:classappend="|${message.isAuthSend?'isUser':''} ${message.hasLike?'isReaction':''}|"
+								th:each="message:${group.message}">
 								<div class="container-main__item-avt">
-									<img src="img/user_1.jpg" alt="" class="container-main__item-avt__img">
+									<img
+										th:src="@{'data:image/png;base64,'+|${message.isAuthSend?group.user.profile:group.withUser.profile}|}"
+										alt="" class="container-main__item-avt__img">
 								</div>
 								<div class="container-main__item-content">
-									<div class="container-main__item-text">
-										Thử màu đó coi sao
-									</div>
+									<div class="container-main__item-text"
+										th:text="${message.message}"></div>
 									<div class="container-main__item-reaction">
 										<div class="container-main__item-reaction-icon">
 											<i style="color: #ff504b" class="fas fa-heart"></i>
-										</div>
-										<div class="container-main__item-reaction-total">
-											1
 										</div>
 									</div>
 								</div>
 								<div class="container-main__item-group">
 									<div class="container-main__item-group-btn">
-										<i style="color: #ff504b" class="fas fa-heart"></i>
+										<i style="color: #ff504b" class="fas fa-heart"
+											th:id="${message.messageId}"
+											th:onclick="|likeMessage(this.id,'${group.withUser.user_id}','${group.groupId}',${group.user.user_id})|"></i>
 									</div>
 									<div class="container-main__item-group-btn">
-										<i class="fad fa-trash-alt"></i>
-									</div>
-								</div>
-							</li>
-							<li class="container-main__item isUser isReaction">
-								<div class="container-main__item-avt">
-									<img src="img/user_1.jpg" alt="" class="container-main__item-avt__img">
-								</div>
-								<div class="container-main__item-content">
-									<div class="container-main__item-text">
-										Thử màu đó coi sao
-									</div>
-									<div class="container-main__item-reaction">
-										<div class="container-main__item-reaction-icon">
-											<i style="color: #ff504b" class="fas fa-heart"></i>
-										</div>
-										<div class="container-main__item-reaction-total">
-											1
-										</div>
-									</div>
-								</div>
-								<div class="container-main__item-group">
-									<div class="container-main__item-group-btn">
-										<i style="color: #ff504b" class="fas fa-heart"></i>
-									</div>
-									<div class="container-main__item-group-btn">
-										<i class="fad fa-trash-alt"></i>
-									</div>
-								</div>
-							</li>
-							<li class="container-main__item isUser isReaction">
-								<div class="container-main__item-avt">
-									<img src="img/user_1.jpg" alt="" class="container-main__item-avt__img">
-								</div>
-								<div class="container-main__item-content">
-									<div class="container-main__item-text">
-										Thử màu đó coi sao
-									</div>
-									<div class="container-main__item-reaction">
-										<div class="container-main__item-reaction-icon">
-											<i style="color: #ff504b" class="fas fa-heart"></i>
-										</div>
-										<div class="container-main__item-reaction-total">
-											1
-										</div>
-									</div>
-								</div>
-								<div class="container-main__item-group">
-									<div class="container-main__item-group-btn reaction-btn">
-										<i style="color: #ff504b" class="fas fa-heart"></i>
-									</div>
-									<div class="container-main__item-group-btn">
-										<i class="fad fa-trash-alt"></i>
-									</div>
-								</div>
-							</li>
-							<li class="container-main__item">
-								<div class="container-main__item-avt">
-									<img src="img/user_1.jpg" alt="" class="container-main__item-avt__img">
-								</div>
-								<div class="container-main__item-content">
-									<div class="container-main__item-text">
-										Thử màu đó coi sao
-									</div>
-									<div class="container-main__item-reaction">
-										<div class="container-main__item-reaction-icon">
-											<i style="color: #ff504b" class="fas fa-heart"></i>
-										</div>
-										<div class="container-main__item-reaction-total">
-											1
-										</div>
-									</div>
-								</div>
-								<div class="container-main__item-group">
-									<div class="container-main__item-group-btn">
-										<i style="color: #ff504b" class="fas fa-heart"></i>
-									</div>
-									<div class="container-main__item-group-btn">
-										<i class="fad fa-trash-alt"></i>
+										<i class="fad fa-trash-alt" th:id="${message.messageId}"
+											th:onclick="|deleteMessage(this.id,'${group.withUser.user_id}','${group.groupId}',${group.user.user_id})|"></i>
 									</div>
 								</div>
 							</li>
@@ -283,7 +151,7 @@
 								<i class="fas fa-plus-circle"></i>
 							</div>
 							<div class="container-main__bottom-left-icon hide">
-								<i class="fas fa-portrait"></i>
+								<i class="fas fa-portrait" onclick="redirectCall()"></i>
 							</div>
 							<div class="container-main__bottom-left-icon hide">
 								<i class="fas fa-air-freshener"></i>
@@ -293,30 +161,39 @@
 							</div>
 						</div>
 						<div class="container-main__bottom-search">
-							<input type="text" placeholder="Aa" class="container-main__bottom-search-input">
+							<input type="text" placeholder="Aa"
+								class="container-main__bottom-search-input"
+								th:id="'messageText'+${group.groupId}"
+								th:onkeypress="|checkIfEnter(event,'${group.withUser.user_id}','${group.groupId}',${group.user.user_id})|">
 							<div class="container-main__bottom-search__icon">
 								<i class="fas fa-smile-wink"></i>
 								<div class="container-main__bottom-search__list-icon">
 									<div class="container-main__bottom-icon-item">
-										<i style="color: #ffbc22;" alt="&#xf4da;" class="fas fa-smile-wink"></i>
+										<i style="color: #ffbc22;" alt="&#xf4da;"
+											class="fas fa-smile-wink"></i>
 									</div>
 									<div class="container-main__bottom-icon-item">
-										<i style="color: #ffbc22;" alt="&#xf5b4;" class="fas fa-sad-tear"></i>
+										<i style="color: #ffbc22;" alt="&#xf5b4;"
+											class="fas fa-sad-tear"></i>
 									</div>
 									<div class="container-main__bottom-icon-item">
-										<i style="color: #ffbc22;" alt="&#xf586;" class="fas fa-grin-squint-tears"></i>
+										<i style="color: #ffbc22;" alt="&#xf586;"
+											class="fas fa-grin-squint-tears"></i>
 									</div>
 									<div class="container-main__bottom-icon-item">
 										<i style="color: #ffbc22;" alt="&#xf556;" class="fas fa-angry"></i>
 									</div>
 									<div class="container-main__bottom-icon-item">
-										<i style="color: #ffbc22;" alt="&#xf579;" class="fas fa-flushed"></i>
+										<i style="color: #ffbc22;" alt="&#xf579;"
+											class="fas fa-flushed"></i>
 									</div>
 									<div class="container-main__bottom-icon-item">
-										<i style="color: #ffbc22;" alt="&#xf5a4;" class="fas fa-meh-blank"></i>
+										<i style="color: #ffbc22;" alt="&#xf5a4;"
+											class="fas fa-meh-blank"></i>
 									</div>
 									<div class="container-main__bottom-icon-item">
-										<i style="color: #ffbc22;" alt="&#xf5a5;" class="fas fa-meh-rolling-eyes"></i>
+										<i style="color: #ffbc22;" alt="&#xf5a5;"
+											class="fas fa-meh-rolling-eyes"></i>
 									</div>
 									<div class="container-main__bottom-icon-item">
 										<i style="color: #ffbc22;" alt="&#xf11a;" class="fas fa-meh"></i>
@@ -340,6 +217,7 @@
 
 		</div>
 	</div>
+	<script th:src="@{/js/mess.js}"></script>
 </body>
 
 </html>

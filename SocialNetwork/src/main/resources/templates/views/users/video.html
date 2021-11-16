@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+
+<title>Realtime communication with WebRTC</title>
+
+<link rel="stylesheet" th:href="@{/css/main.css}" />
+
+</head>
+
+<body th:object="${currentUser}">
+	<audio  loop id="audio">
+		<source th:src="@{/mp3/messenger.mp3}" type="audio/mpeg">
+	</audio>
+	<h1>Realtime communication with WebRTC</h1>
+	<span th:text="${currentUser.user_id}" id = "userId" style="display:none;"> </span>
+	<video id="localVideo" autoplay muted></video>
+	<video id="remoteVideo" autoplay></video>
+
+	<div>
+		<button id="startButton" onclick="start()">Start</button>
+		<button id="callButton" onclick="call()">Call</button>
+		<button id="hangupButton" onclick="hangup()">Hang Up</button>
+		<button id="stopButton" onclick="stop()">Stop</button>
+		<button id = "acceptButton" style = "display:none">Accept</button>
+	</div>
+	<script th:src="@{https://webrtc.github.io/adapter/adapter-latest.js}"></script>
+	<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

@@ -41,10 +41,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
-		http.rememberMe().key("Secret").tokenValiditySeconds(3600);
+		http.rememberMe().key("Secret").tokenValiditySeconds(36000);
 		http.authorizeRequests()
 				.antMatchers("/register","/login","/error","/invalid").permitAll()
-				.antMatchers("/css/**","/js/**","/img/**","/fonts/**").permitAll()
+				.antMatchers("/css/**","/js/**","/img/**","/fonts/**","/mp3/**").permitAll()
 				.antMatchers("/user/**","/").hasAnyAuthority("user","admin")
 				.antMatchers("/admin/**").hasAuthority("admin")
 				.anyRequest().authenticated()
