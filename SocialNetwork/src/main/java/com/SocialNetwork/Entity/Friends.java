@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "friends", schema="socialnetwork")
 public class Friends {
@@ -20,10 +22,12 @@ public class Friends {
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="user1_id",referencedColumnName="user_id")
+	@JsonBackReference
 	private User user1;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="user2_id",referencedColumnName="user_id")
+	@JsonBackReference
 	private User user2;
 	
 	private boolean confirmed;

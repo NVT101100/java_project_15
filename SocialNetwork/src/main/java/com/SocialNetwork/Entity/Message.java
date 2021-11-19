@@ -4,12 +4,15 @@ import java.sql.Date;
 import java.sql.Time;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name="messages",schema="socialnetwork")
@@ -34,8 +37,9 @@ public class Message {
 		this.fromto = fromto;
 	}
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="group_id",referencedColumnName="group_id")
+	@JsonBackReference
 	public GroupChat group;
 
 	public Integer getMessage_id() {

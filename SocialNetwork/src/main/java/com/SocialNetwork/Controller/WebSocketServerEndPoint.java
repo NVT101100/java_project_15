@@ -13,25 +13,42 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.origin.SystemEnvironmentOrigin;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.SocialNetwork.Entity.JsonParseMessage;
 import com.SocialNetwork.Repository.UserRepository;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonStreamParser;
 
 @RestController
 @Component
-@ServerEndpoint(value="/user/messageServer/{userId}")
+@ServerEndpoint(value="/user/WebSocket/{Page}/{userId}")
 public class WebSocketServerEndPoint {
-	private static Map<Integer, Session> onlineSessions = new ConcurrentHashMap<>();
+	private static Map<String, Session> onlineSessions = new ConcurrentHashMap<>();
 	
-	public void sendMessage(String message, Integer receiverId, String userId) {
+	public void sendMessage(String message,String userId, String toUser,String Page,String type) {
 		try {
-			Session receiverSession = onlineSessions.get(receiverId);
-			if (receiverSession!= null) receiverSession.getBasicRemote().sendText(message);
-			onlineSessions.get(Integer.valueOf(userId)).getBasicRemote().sendText(message);
+			if(Page.equals("homePage")){
+				Session receiverSession = onlineSessions.get(Page+toUser);
+				if (receiverSession!= null) receiverSession.getBasicRemote().sendText(message);
+				if(!type.equals("acceptfriend")) if(!userId.equals(toUser))onlineSessions.get(Page+userId).getBasicRemote().sendText(message);
+			}
+			if(Page.equals("profilePage")) {
+				if(type.equals("addfriend")) {
+					Session receiverSession = onlineSessions.get("homePage"+toUser);
+					if (receiverSession!= null) receiverSession.getBasicRemote().sendText(message);
+				}
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -39,15 +56,18 @@ public class WebSocketServerEndPoint {
 	}
 	
 	@OnOpen
-	public void openSession(Session session,@PathParam("userId") String userId) {
-		session.setMaxTextMessageBufferSize(1024*1024*64);
-		onlineSessions.put(Integer.valueOf(userId), session);
+	public void openSession(Session session,@PathParam("userId") String userId,@PathParam("Page") String page) {
+		session.setMaxTextMessageBufferSize(1024*1024*128);
+		onlineSessions.put(page+userId, session);
 	}
 	
 	@OnMessage
-	public void onMessage(Session session,String jsonString) {
-		JsonParseMessage message = JSON.parseObject(jsonString,JsonParseMessage.class);
-		sendMessage(jsonString, Integer.valueOf(message.withUserId),message.userId);
+	public void onMessage(Session session,String jsonString,@PathParam("userId") String userId) {
+		JSONObject jsonObject = JSON.parseObject(jsonString);
+		String toUser = jsonObject.getString("toUser");
+		String Page = jsonObject.getString("page");
+		String type = jsonObject.getJSONObject("content").getString("type");
+		sendMessage(jsonString,userId,toUser,Page,type);
 	}
 	
 	@OnClose

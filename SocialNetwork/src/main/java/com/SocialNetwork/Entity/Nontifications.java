@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "nontifications", schema = "socialnetwork")
@@ -62,7 +63,7 @@ public class Nontifications {
 		this.text = text;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "receiver_id", referencedColumnName = "user_id")
 	@JsonBackReference
 	public User receiver;
@@ -71,8 +72,8 @@ public class Nontifications {
 	@JoinColumn(name = "sender_id", referencedColumnName = "user_id")
 	@JsonBackReference
 	public User sender;
-	
-	@ManyToOne(fetch=FetchType.LAZY)
+
+	@ManyToOne
 	@JoinColumn(name="post_id",referencedColumnName="post_id")
 	@JsonBackReference
 	public Posts post;

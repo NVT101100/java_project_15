@@ -1,7 +1,7 @@
 var userId = document.getElementById("userId").innerText;
 var sound = document.getElementById("myAudio"); 
 function getWebSocket() {
-        var webSocket = new WebSocket( 'wss://'+window.location.hostname+'/SocialNetwork/user/messageServer/'+userId);
+        var webSocket = new WebSocket( 'wss://'+window.location.hostname+':8443/SocialNetwork/user/messageServer/'+userId);
         webSocket.onopen = function (event) {
             console.log('WebSocket open connection');
         };
@@ -9,7 +9,7 @@ function getWebSocket() {
         	var message = JSON.parse(event.data);
             if(message.type == "chat") {
             	createNewMessage(message);
-            	playAudio();
+            	if(message.userId != userId) playAudio();
             }
             else if(message.type == "like") createLike(message);
             else if(message.type == "unlike") unLike(message);

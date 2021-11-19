@@ -19,9 +19,10 @@
 <script th:src="@{https://code.jquery.com/jquery-3.6.0.js}"></script>
 </head>
 <body>
-
+	<audio th:src="@{/mp3/notify.mp3}" id="notifySound"></audio>
 	<div class="app" th:object="${currentUser}"
 		onmousedown="closeSetting()">
+		<span th:text="${currentUser.user_id}" id = "userId" style="display:none;"></span>
 		<div class="app-grid">
 			<header class="header">
 				<div class="header-grid">
@@ -70,7 +71,7 @@
 							</svg></li>
 						<li class="header-right__item"><span
 							class="header-right__item-count" id="count"
-							th:if="${nonHasntSeen}" th:text="${nonHasntSeen}"></span> <i
+							th:style="'display:'+${nonHasntSeen}?'flex':'none'+';'" th:text="${nonHasntSeen}"></span> <i
 							class="fas fa-bell"
 							th:onclick="|showNotify('${currentUser.user_id}')|"></i>
 							<div class="header-right__item-more" id="listNotify">
@@ -80,9 +81,9 @@
 
 								<div class="notify-content">
 									<div class="notify-content__new">
-										<div class="notify-content__new-head">
+										<div class="notify-content__new-head" id="notifyContentNewHead">
 											<ul class="notify-content__new-list"
-												th:each="notify:${notifies}">
+												th:each="notify:${notifies}" id="notifyContent">
 												<li class="notify-content__item"><img
 													th:src="@{'data:image/png;base64,'+${notify.nontifications.sender.profile}}"
 													alt="" class="notify-content__item-avatar">
@@ -124,11 +125,11 @@
 							th:text="${currentUser.fullname}"
 							th:href="@{'/user/profile/'+${currentUser.user_id}}"></a></li>
 					</ul>
-					<div class="friend-content">
+					<div class="friend-content" >
 						<span class="friend-content__item-content-text"> Lời mời
 							kết bạn</span>
-						<div class="frient-content__new">
-							<ul class="friend-content__new-list"
+						<div class="frient-content__new" id="friendContentNew">
+							<ul class="friend-content__new-list" id="friendContentList"
 								th:each="nontification: ${nontifications}">
 								<li class="friend-content__item"
 									th:id="'non'+${nontification.nontifications.non_id}"><img
@@ -233,7 +234,7 @@
 							<div class="newsfeed__respond-react">
 								<div class="newsfeed__respond-react-icon"
 									th:id="'heartPost'+${post.Posts.post_id}"
-									th:onclick="|handleHeart('${post.Posts.post_id}','${currentUser.user_id}')|"
+									th:onclick="|handleHeart('${post.Posts.post_id}','${currentUser.user_id}','${post.Posts.userPost.user_id}')|"
 									th:classappend="${post.isLiked}?'active':''">
 									<i class="far fa-heart"></i> <i class="fas fa-heart"></i>
 								</div>
@@ -253,7 +254,7 @@
 									<div class="newsfeed__comment-box">
 										<input type="text" placeholder="Viết bình luận ..."
 											th:id="'commentText'+${post.Posts.post_id}" class="newsfeed__comment-input"
-											th:onkeypress="|checkIfEnter(event,'${post.Posts.post_id}')|">
+											th:onkeypress="|checkIfEnter(event,'${post.Posts.post_id}','${post.Posts.userPost.user_id}')|">
 										<div class="newsfeed__comment-box-right">
 											<div class="newsfeed__comment-box-icon"></div>
 										</div>

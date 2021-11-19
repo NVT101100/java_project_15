@@ -24,13 +24,17 @@ import com.SocialNetwork.Repository.ActionRepository;
 import com.SocialNetwork.Repository.NontificationRepository;
 import com.SocialNetwork.Repository.PostRepository;
 import com.SocialNetwork.Repository.UserRepository;
+import com.SocialNetwork.Service.CalculateTime;
 import com.SocialNetwork.Sheet.CommentSheet;
 import com.SocialNetwork.Sheet.LikeSheet;
+import com.SocialNetwork.Sheet.NonSheetCopy;
 import com.SocialNetwork.Sheet.PostSheet;
+import com.SocialNetwork.Sheet.ReturnCommentSheet;
 import com.SocialNetwork.Sheet.UserCommentSheet;
 
 import aj.org.objectweb.asm.Type;
 import ch.qos.logback.core.joran.action.Action;
+import net.bytebuddy.asm.Advice.Return;
 
 @Controller
 public class PostController {
@@ -64,11 +68,17 @@ public class PostController {
 	}
 
 	@PostMapping("/user/action/like/{postId}")
-	public @ResponseBody boolean likePost(@PathVariable("postId") String postId, Authentication authentication,
+	public @ResponseBody NonSheetCopy likePost(@PathVariable("postId") String postId, Authentication authentication,
 			@RequestBody String type) {
-		boolean isSuccess;
-		isSuccess = ActionLike(userRepository.findByEmail(authentication.getName()), Integer.valueOf(postId), type);
-		return isSuccess;
+		User user = userRepository.findByEmail(authentication.getName());
+		CalculateTime calculateTime = new CalculateTime();
+		Nontifications isSuccess = ActionLike(user.getUser_id(), Integer.valueOf(postId), type);
+		if (isSuccess != null) {
+			NonSheetCopy data = new NonSheetCopy(isSuccess.getText(),
+					calculateTime.calculateTime(isSuccess.getDate(), isSuccess.getTime()), user);
+			return data;
+		} else
+			return null;
 	}
 
 	@PostMapping("/user/deletePost/{postId}")
@@ -84,22 +94,17 @@ public class PostController {
 	}
 
 	@PostMapping("/user/comment/{postId}")
-	public @ResponseBody UserCommentSheet commentPost(@PathVariable("postId") String postId,
+	public @ResponseBody ReturnCommentSheet commentPost(@PathVariable("postId") String postId,
 			@RequestBody String comment, Authentication authentication) {
-		Actions newComment = ActionComment(userRepository.findByEmail(authentication.getName()),
-				Integer.valueOf(postId), comment);
-		UserCommentSheet responeInfo = new UserCommentSheet(newComment.getUser().getFullname(),
-				newComment.getUser().getProfile(), newComment.getAction_id(), newComment.getText());
-		if (newComment != null)
-			return responeInfo;
-		else
-			return null;
+		ReturnCommentSheet returnCommentSheet = ActionComment(userRepository.findByEmail(authentication.getName()), Integer.valueOf(postId), comment);
+		return returnCommentSheet;
 	}
 
-	public boolean ActionLike(User user, Integer postId, String type) {
+	public Nontifications ActionLike(Integer userId, Integer postId, String type) {
 		Date date = new Date(System.currentTimeMillis());
 		Time time = new Time(System.currentTimeMillis());
-		User sender = user;
+		User sender = userRepository.getById(userId);
+		Nontifications non = null;
 		Actions actions = actionRepository.likeOfPost(sender.getUser_id(), Integer.valueOf(postId), "like");
 		if (actions == null && type.equals("like")) {
 			Posts post = postRepository.findById(postId).get();
@@ -122,24 +127,29 @@ public class PostController {
 				nontifications.setText(" đã thích một bài viết của bạn");
 				nontifications.setDate(date);
 				nontifications.setTime(time);
+				non = nontifications;
 				listNon.add(nontifications);
 				receiver.setNons2(listNon);
 				post.setNontifications(listNon);
+				nontifications.setPost(post);
+				nonRepository.save(nontifications);
 			}
 			userRepository.saveAndFlush(sender);
 			userRepository.saveAndFlush(receiver);
-			postRepository.saveAndFlush(post);
-			return true;
+			postRepository.save(post);
+			return non;
 		} else if (actions != null && type.equals("unlike")) {
 			actionRepository.delete(actions);
-			return true;
+			return null;
 		} else
-			return false;
+			return non;
 	}
 
-	public Actions ActionComment(User user, Integer postId, String commentText) {
+	public ReturnCommentSheet ActionComment(User user, Integer postId, String commentText) {
 		Date date = new Date(System.currentTimeMillis());
 		Time time = new Time(System.currentTimeMillis());
+		CalculateTime calculateTime =  new CalculateTime();
+		ReturnCommentSheet returnCommentSheet = null;
 		Actions action = new Actions();
 		Posts post = postRepository.findById(postId).get();
 		User sender = user;
@@ -153,6 +163,8 @@ public class PostController {
 		action.setTime(time);
 		listComment.add(action);
 		post.setAction(listComment);
+		UserCommentSheet responeInfo = new UserCommentSheet(action.getUser().getFullname(),
+				action.getUser().getProfile(), action.getAction_id(), action.getText());
 		if (sender.getUser_id() != receiver.getUser_id()) {
 			Nontifications nontifications = new Nontifications();
 			List<Nontifications> listNon = new ArrayList<>();
@@ -165,11 +177,13 @@ public class PostController {
 			listNon.add(nontifications);
 			receiver.setNons2(listNon);
 			post.setNontifications(listNon);
+			NonSheetCopy nonSheetCopy = new NonSheetCopy(nontifications.getText(),calculateTime.calculateTime(nontifications.getDate(), nontifications.getTime()) , sender);
+			returnCommentSheet = new ReturnCommentSheet(responeInfo, nonSheetCopy );
 		}
 		userRepository.saveAndFlush(sender);
 		userRepository.saveAndFlush(receiver);
 		postRepository.saveAndFlush(post);
-		return action;
+		return returnCommentSheet;
 	}
 
 }

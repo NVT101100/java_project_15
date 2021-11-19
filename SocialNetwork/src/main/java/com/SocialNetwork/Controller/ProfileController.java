@@ -36,6 +36,7 @@ import com.SocialNetwork.Service.CalculateTime;
 import com.SocialNetwork.Service.FriendService;
 import com.SocialNetwork.Sheet.CommentSheet;
 import com.SocialNetwork.Sheet.FriendSheet;
+import com.SocialNetwork.Sheet.NonSheetCopy;
 import com.SocialNetwork.Sheet.PostWithLikeSheet;
 
 @Controller
@@ -102,6 +103,7 @@ public class ProfileController {
 				}
 			}
 			model.addObject("currentUser", auth);
+			model.addObject("accessUser", auth);
 			model.addObject("posts", myPostWithLikeSheets);
 			listFriend = FriendService.listFriend(auth);
 			model.addObject("numFriend", listFriend.size());
@@ -129,6 +131,7 @@ public class ProfileController {
 			model.addObject("posts", myPostWithLikeSheets);
 			isAuth = false;
 			model.addObject("currentUser", user);
+			model.addObject("accessUser", auth);
 			listFriend = FriendService.listFriend(user);
 			model.addObject("numFriend", listFriend.size());
 			if (listFriend.size() > 5)
@@ -167,10 +170,12 @@ public class ProfileController {
 	}
 
 	@PostMapping("/user/addfriend/{userId}")
-	public @ResponseBody String addNewFriend(@PathVariable("userId") String userId, Authentication authentication,
+	public @ResponseBody NonSheetCopy addNewFriend(@PathVariable("userId") String userId, Authentication authentication,
 			@RequestBody String type) {
 		Date date = new Date(System.currentTimeMillis());
 		Time time = new Time(System.currentTimeMillis());
+		CalculateTime calculateTime = new CalculateTime();
+		NonSheetCopy nonSheetCopy = null;
 		User receiver = repository.findById(Integer.valueOf(userId)).get();
 		User sender = repository.findByEmail(authentication.getName());
 		Friends friends = new Friends();
@@ -184,6 +189,7 @@ public class ProfileController {
 			nontifications.setText(" đã gửi cho bạn lời mời kết bạn");
 			nontifications.setDate(date);
 			nontifications.setTime(time);
+			nontifications = nonRepository.save(nontifications);
 			listNon.add(nontifications);
 			friends.setUser1(sender);
 			friends.setUser2(receiver);
@@ -197,14 +203,15 @@ public class ProfileController {
 			sender.setFriends1(listFriend);
 			repository.saveAndFlush(receiver);
 			repository.saveAndFlush(sender);
-			return "Thêm bạn thành công";
+			nonSheetCopy = new NonSheetCopy(nontifications,calculateTime.calculateTime(date, time),sender);
+			return nonSheetCopy;
 		}
 		if (type.equals("cancel")) {
 			Friends friend = friendRepository.findFriend(sender.getUser_id(), receiver.getUser_id());
 			friendRepository.delete(friend);
-			return "Hủy lời mời thành công";
+			return null;
 		}
-		return "";
+		return null;
 	}
 
 	public void createAvatarPost(String id, MultipartFile images) {

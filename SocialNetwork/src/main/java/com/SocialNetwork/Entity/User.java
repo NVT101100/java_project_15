@@ -15,6 +15,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -47,8 +48,8 @@ public class User {
 	@JsonManagedReference
 	private List<Friends> friend2;
 	
-	@JsonIgnore
 	@OneToMany(mappedBy="user",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+	@JsonManagedReference
 	private List<Actions> actions;
 	
 	@OneToMany(mappedBy="sender",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
@@ -88,6 +89,7 @@ public class User {
 		this.nons2 = nons2;
 	}
 	@OneToMany(mappedBy="receiver",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+	@JsonManagedReference
 	private List<Nontifications> nons2;
 	
 	public List<Actions> getLikes() {

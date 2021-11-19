@@ -33,6 +33,7 @@ import com.SocialNetwork.Repository.UserRepository;
 import com.SocialNetwork.Service.CalculateTime;
 import com.SocialNetwork.Sheet.CommentSheet;
 import com.SocialNetwork.Sheet.FriendSheet;
+import com.SocialNetwork.Sheet.NonSheetCopy;
 import com.SocialNetwork.Sheet.NontificationSheet;
 import com.SocialNetwork.Sheet.PostWithLikeSheet;
 
@@ -99,7 +100,10 @@ public class HomeController {
 					List<CommentSheet> commentSheets = new ArrayList<>();
 					List<Actions> Comments = actionRepository.findActionByType(p.getPost_id(), "comment");
 					if (p.getUserPost().getUser_id() == user.getUser_id())
+					{
 						isYourPost = true;
+						//listNon.addAll(p.getNontifications());
+					}
 					for (Actions a : Comments) {
 						CommentSheet comment = new CommentSheet(a.getAction_id(), a.getText(), a.getUser(), a.getDate(),
 								a.getTime());
@@ -123,7 +127,8 @@ public class HomeController {
 					}
 				}
 			}
-			modelAndView.addObject("nonHasntSeen", nonRepository.hasntSeen(user.getUser_id()).size());
+			int nonhasntseen = nonRepository.hasntSeen(user.getUser_id()).size();
+			modelAndView.addObject("nonHasntSeen", nonhasntseen);
 			modelAndView.addObject("friends", listFriend);
 			modelAndView.addObject("posts", myPostWithLikeSheets);
 			modelAndView.addObject("nontifications", listNewRequest);
@@ -153,8 +158,11 @@ public class HomeController {
 	}
 
 	@PostMapping("/user/acceptFriend/{userId}/{friendId}/{nonId}")
-	public @ResponseBody String acceptFriend(@PathVariable("userId") String userId,
-			@PathVariable("friendId") String friendId, @PathVariable("nonId") String nonId, @RequestBody String type) {
+	public @ResponseBody NonSheetCopy acceptFriend(@PathVariable("userId") String userId,
+			@PathVariable("friendId") String friendId, @PathVariable("nonId") String nonId, @RequestBody String type,Authentication auth) {
+		NonSheetCopy nonSheetCopy = null;
+		User user = repository.findByEmail(auth.getName());
+		CalculateTime calculateTime = new CalculateTime();
 		if (type.equals("accept")) {
 			Friends friend = friendRepository.findFriend(Integer.valueOf(userId), Integer.valueOf(friendId));
 			Nontifications nontifications = nonRepository.findById(Integer.valueOf(nonId)).get();
@@ -162,13 +170,14 @@ public class HomeController {
 				friend.setConfirmed(true);
 				friend.setWaiting(false);
 				friendRepository.save(friend);
-				CreateNontifications(Integer.valueOf(userId), Integer.valueOf(friendId), "acceptfriend");
+				Nontifications newNon = CreateNontifications(user, Integer.valueOf(friendId), "acceptfriend");
+				nonSheetCopy = new NonSheetCopy(newNon.getText(), calculateTime.calculateTime(newNon.getDate(), newNon.getTime()),user);
 				nonRepository.delete(nontifications);
-				return "success";
+				return nonSheetCopy;
 			} else
-				return "false";
+				return nonSheetCopy;
 		} else
-			return "false";
+			return nonSheetCopy;
 	}
 
 	@PostMapping("/user/refuseFriend/{userId}/{friendId}/{nonId}")
@@ -207,20 +216,21 @@ public class HomeController {
 		return true;
 	}
 
-	public void CreateNontifications(Integer senderId, Integer receiverId, String text) {
+	public Nontifications CreateNontifications(User sender, Integer receiverId, String text) {
 		Date date = new Date(System.currentTimeMillis());
 		Time time = new Time(System.currentTimeMillis());
-		User sender = repository.getById(senderId);
-		User receiver = repository.getById(receiverId);
+		User receiver = repository.findById(receiverId).get();
 		Nontifications nontifications = new Nontifications();
-		List<Nontifications> listNon = new ArrayList<>();
+		//List<Nontifications> listNon = new ArrayList<>();
 		nontifications.setReceiver(receiver);
 		nontifications.setSender(sender);
 		nontifications.setType(text);
 		nontifications.setText(" đã đã chấp nhận lời mời kết bạn");
 		nontifications.setDate(date);
 		nontifications.setTime(time);
-		listNon.add(nontifications);
-		receiver.setNons2(listNon);
+		//listNon.add(nontifications);
+		//receiver.setNons2(listNon);
+		nontifications = nonRepository.saveAndFlush(nontifications);
+		return nontifications;
 	}
 }

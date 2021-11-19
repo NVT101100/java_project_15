@@ -36,21 +36,21 @@ websocket.onmessage = function(event){
 }
 
 const ICE_config = {
-	'iceServers': [
-		{
-		    'url': 'stun:stun.l.google.com:19302'
-		},
-		{
-			'url': 'turn:192.158.29.39:3478?transport=udp',
-		    'credential': 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-		    'username': '28224511:1379330808'
-		},
-		{
-		    'url': 'turn:192.158.29.39:3478?transport=tcp',
-		    'credential': 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-		    'username': '28224511:1379330808'
-		}
-	]
+		iceServers: [/*{
+			   urls: [ "stun:hk-turn1.xirsys.com" ]
+			},*/ {
+			   username: "Sd2vpMxQkRdV-G_gj4gr04XdD4Q1e27m_CFsjaUTkU7q9MbP7SMtdf_vIPIZXHeTAAAAAGGWOTRuZ3V5ZW50aG9p",
+			   credential: "db57866c-4862-11ec-971e-0242ac120004",
+			   urls: [
+			       //"turn:hk-turn1.xirsys.com:80?transport=udp",
+			       //"turn:hk-turn1.xirsys.com:3478?transport=udp",
+			       //"turn:hk-turn1.xirsys.com:80?transport=tcp",
+			       //"turn:hk-turn1.xirsys.com:3478?transport=tcp",
+			      // "turns:hk-turn1.xirsys.com:443?transport=tcp",
+			       "turns:hk-turn1.xirsys.com:5349?transport=udp"
+			   ]
+			}]
+
 }
 
 function start(){
@@ -126,6 +126,7 @@ function acceptAnswer(message){
 function acceptCandidate(message){
 	const newCandidate = new RTCIceCandidate(message.content);
 	if(remotePeer.localDescription) remotePeer.addIceCandidate(newCandidate);
+	console.log(remotePeer)
 }
 
 function gotRemoteMediaStream(event){

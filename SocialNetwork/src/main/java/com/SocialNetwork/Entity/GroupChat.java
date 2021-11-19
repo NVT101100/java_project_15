@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="groupchat",schema="socialnetwork")
@@ -34,6 +35,7 @@ public class GroupChat {
 	public User receiver;
 	
 	@OneToMany(mappedBy="group",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+	@JsonManagedReference
 	public List<Message> messages;
 	
 	public List<Message> getMessages() {
