@@ -36,20 +36,21 @@ websocket.onmessage = function(event){
 }
 
 const ICE_config = {
-		iceServers: [/*{
+		iceServers: [{
 			   urls: [ "stun:hk-turn1.xirsys.com" ]
-			},*/ {
+			}, {
 			   username: "Sd2vpMxQkRdV-G_gj4gr04XdD4Q1e27m_CFsjaUTkU7q9MbP7SMtdf_vIPIZXHeTAAAAAGGWOTRuZ3V5ZW50aG9p",
 			   credential: "db57866c-4862-11ec-971e-0242ac120004",
 			   urls: [
-			       //"turn:hk-turn1.xirsys.com:80?transport=udp",
-			       //"turn:hk-turn1.xirsys.com:3478?transport=udp",
-			       //"turn:hk-turn1.xirsys.com:80?transport=tcp",
-			       //"turn:hk-turn1.xirsys.com:3478?transport=tcp",
-			      // "turns:hk-turn1.xirsys.com:443?transport=tcp",
+			       "turn:hk-turn1.xirsys.com:80?transport=udp",
+			       "turn:hk-turn1.xirsys.com:3478?transport=udp",
+			       "turn:hk-turn1.xirsys.com:80?transport=tcp",
+			       "turn:hk-turn1.xirsys.com:3478?transport=tcp",
+			       "turns:hk-turn1.xirsys.com:443?transport=tcp",
 			       "turns:hk-turn1.xirsys.com:5349?transport=udp"
 			   ]
-			}]
+			}
+			]
 
 }
 

@@ -1,6 +1,5 @@
-const userId = document.getElementById("userId").innerText;
-const websocket = new WebSocket('wss://'+window.location.hostname+':8443/SocialNetwork/user/WebSocket/profilePage/'+userId)
-console.log(websocket)
+const accessUserId = document.getElementById("userId").innerText;
+const webSocket = new WebSocket('wss://'+window.location.hostname+':8443/SocialNetwork/user/WebSocket/profilePage/'+accessUserId)
 function editProfileImage(userId){
 	 let input = document.createElement("input");
 	 var profileImage = document.getElementById("profileImage");
@@ -71,7 +70,7 @@ function handleFriend (toUserId) {
 	if(btnFriend.classList.value == "my-wall__head-more-btn"&&btnFriend.innerHTML.includes("Hủy lời mời")) {
 		$.ajax({
 	       	 type : "POST",
-	       	 url : "/SocialNetwork/user/addfriend/"+userId,
+	       	 url : "/SocialNetwork/user/addfriend/"+toUserId,
 	       	 data : "cancel",
 	       	 processData: false,
 	       	 contentType: false,
@@ -93,7 +92,7 @@ function handleFriend (toUserId) {
 	       	 success : function(data) {
 	       		btnFriend.classList.remove("btn-add")
 	    		icon.innerHTML = "Hủy lời mời";
-	    		websocket.send(JSON.stringify({page: "profilePage",toUser: toUserId,content: {type: "addfriend",data: data}}))
+	    		webSocket.send(JSON.stringify({page: "profilePage",toUser: toUserId,content: {type: "addfriend",data: data}}))
 	       	 },
 	       	 error : function(e) {
 	       		 alert("Đã xảy ra lỗi");

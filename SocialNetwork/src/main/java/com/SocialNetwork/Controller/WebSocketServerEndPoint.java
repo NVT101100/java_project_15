@@ -46,8 +46,28 @@ public class WebSocketServerEndPoint {
 			if(Page.equals("profilePage")) {
 				if(type.equals("addfriend")) {
 					Session receiverSession = onlineSessions.get("homePage"+toUser);
-					if (receiverSession!= null) receiverSession.getBasicRemote().sendText(message);
+					if (receiverSession != null) receiverSession.getBasicRemote().sendText(message);
 				}
+			}
+			if(Page.equals("messagePage")) {
+				Session receiverSession = onlineSessions.get(Page+toUser);
+				if(receiverSession != null) {
+					if(!receiverSession.isOpen()) {
+						receiverSession = onlineSessions.get("homePage"+toUser);
+						if(receiverSession!=null) {
+							receiverSession.getBasicRemote().sendText(message);
+						}
+					}
+					else receiverSession.getBasicRemote().sendText(message);
+				}
+				else {
+					receiverSession = onlineSessions.get("homePage"+toUser);
+					if(receiverSession!=null) {
+						receiverSession.getBasicRemote().sendText(message);
+					}
+				}
+				Session userSession = onlineSessions.get(Page+userId);
+				if(userSession!=null) userSession.getBasicRemote().sendText(message);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

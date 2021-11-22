@@ -1,19 +1,20 @@
 var userId = document.getElementById("userId").innerText;
 var sound = document.getElementById("myAudio"); 
 function getWebSocket() {
-        var webSocket = new WebSocket( 'wss://'+window.location.hostname+':8443/SocialNetwork/user/messageServer/'+userId);
+        var webSocket = new WebSocket( 'wss://'+window.location.hostname+':8443/SocialNetwork/user/WebSocket/messagePage/'+userId);
         webSocket.onopen = function (event) {
-            console.log('WebSocket open connection');
+        	
         };
         webSocket.onmessage = function (event) {
         	var message = JSON.parse(event.data);
-            if(message.type == "chat") {
-            	createNewMessage(message);
-            	if(message.userId != userId) playAudio();
+        	console.log(message);
+            if(message.content.data.type == "chat") {
+            	createNewMessage(message.content.data);
+            	if(message.toUser == userId) playAudio();
             }
-            else if(message.type == "like") createLike(message);
-            else if(message.type == "unlike") unLike(message);
-            else if(message.type == "delete") removeMessage(message);
+            if(message.content.data.type == "like") createLike(message.content.data);
+            if(message.content.data.type == "unlike") unLike(message.content.data);
+            if(message.content.data.type == "delete") removeMessage(message.content.data);
         };
         webSocket.onclose = function (event) {
             console.log('WebSocket close connection.');
@@ -38,9 +39,7 @@ function getWebSocket() {
    		   	 url : "/SocialNetwork/user/saveMessage",
    		   	 data : data,
    		   	 success : function(data) {
-   		   		 if(data.type == "chat") {
-   		   			 sendMsgToServer(JSON.stringify(data));
-   		   		 }
+   		   			sendMsgToServer(JSON.stringify({page: "messagePage",toUser: data.withUserId,content: {type: "message",data: data}}));
    		   	 },
    		   	 error : function(e) {
    		   		 alert("Failed");
@@ -62,6 +61,10 @@ function getWebSocket() {
     }
     
     function createNewMessage(data){
+    	const newMessage = document.getElementById("lastMessage"+data.groupId)
+    	const timeText = document.getElementById("timeText"+data.groupId)
+    	newMessage.innerHTML = data.message;
+    	timeText.innerHTML = "Vừa xong"
     	var ul = document.getElementById("containerBody"+data.groupId);
     	var li = document.createElement("li");
     	var withUserProfile = null;
@@ -83,10 +86,10 @@ function getWebSocket() {
 								+'</div>'
 								+'<div class="container-main__item-group">'
 									+'<div class="container-main__item-group-btn">'
-										+'<i style="color: #ff504b" class="fas fa-heart id='+data.messageId+'"></i>'
+										+'<i style="color: #ff504b" class="fas fa-heart id='+data.messageId+'"'+'onclick="likeMessage('+data.messageId+','+data.withUserId+','+data.groupId+','+data.userId+')"></i>'
 									+'</div>'
 									+'<div class="container-main__item-group-btn">'
-										+'<i class="fad fa-trash-alt id = '+data.messageId+'"></i>'
+										+'<i class="fad fa-trash-alt id = '+data.messageId+'"'+'onclick="deleteMessage('+data.messageId+','+data.withUserId+','+data.groupId+','+data.userId+')"></i>'
 									+'</div></div></li></ul>';
     	ul.appendChild(li);
     	li.scrollIntoView(true);
@@ -102,7 +105,7 @@ function getWebSocket() {
       		   	 url : "/SocialNetwork/user/likeMessage",
       		   	 data : data,
       		   	 success : function(data) {
-      		   			 sendMsgToServer(JSON.stringify(data));
+      		   		 sendMsgToServer(JSON.stringify({page: "messagePage",toUser: data.withUserId,content: {type: "message",data: data}}));
       		   	 },
       		   	 error : function(e) {
       		   		 alert("Failed");
@@ -117,7 +120,7 @@ function getWebSocket() {
       		   	 url : "/SocialNetwork/user/likeMessage",
       		   	 data : data,
       		   	 success : function(data) {
-      		   			 sendMsgToServer(JSON.stringify(data));
+      		   		sendMsgToServer(JSON.stringify({page: "messagePage",toUser: data.withUserId,content: {type: "message",data: data}}));
       		   	 },
       		   	 error : function(e) {
       		   		 alert("Failed");
@@ -133,7 +136,7 @@ function getWebSocket() {
   		   	 url : "/SocialNetwork/user/deleteMessage",
   		   	 data : data,
   		   	 success : function(data) {
-  		   			 sendMsgToServer(JSON.stringify(data));
+  		   			 sendMsgToServer(JSON.stringify({page: "messagePage",toUser: data.withUserId,content: {type: "message",data: data}}));
   		   	 },
   		   	 error : function(e) {
   		   		 alert("Failed");

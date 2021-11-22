@@ -76,8 +76,8 @@ public class MessageController {
 		Time time = new Time(System.currentTimeMillis());
 		JsonParseMessage jsonParseMessage = JSON.parseObject(jsonMessage,JsonParseMessage.class);
 		GroupChat groupChat = groupRepository.getById(Integer.valueOf(jsonParseMessage.groupId));
-		//User sender = userRepository.getById(Integer.valueOf(jsonParseMessage.userId));
-		//User receiver = userRepository.getById(Integer.valueOf(jsonParseMessage.withUserId));
+		//User sender = userRepository.findById(Integer.valueOf(jsonParseMessage.userId)).get();
+		//User receiver = userRepository.findById(Integer.valueOf(jsonParseMessage.withUserId)).get();
 		Message message = new Message();
 		List<Message> messages = new ArrayList<>();
 		message.setDate(date);

@@ -12,7 +12,6 @@ websocket.onmessage = function(event) {
 	var message = JSON.parse(event.data)
 	console.log(message)
 	if(message.content.type == "like") {
-		//console.log()
 		newLike(message.content.postId);
 		if(message.content.non != null && message.toUser == userId) createNontification(message);
 	}
@@ -25,6 +24,7 @@ websocket.onmessage = function(event) {
 		createNewFriendRequest(message);
 	}
 	if(message.content.type == "acceptfriend") createNontification(message);
+	if(message.content.type == "message") newMessageNotify();
 };
 function checkSubmit() {
 	if (textAreaBox.value == ""){
@@ -256,9 +256,6 @@ function hiddenAndShowComment(postId){
 function checkIfEnter(key,postId,userPost){
 	if(key.keyCode == 13){
 		var comment = document.getElementById("commentText"+postId).value
-		var numComment = document.getElementById("numcomment"+postId)
-		var textNumComment = numComment.innerText.split(' ');
-		var n_numComment = textNumComment[0];
 		$.ajax({
 		   	 type : "POST",
 		   	 contentType : "application/json",
@@ -309,6 +306,9 @@ function createNewComment(postId,data){
 	div8.innerHTML = data.text;
 	div6.appendChild(div8);
 	document.getElementById("commentText"+postId).value = "";
+	var numComment = document.getElementById("numcomment"+postId)
+	var textNumComment = numComment.innerText.split(' ');
+	var n_numComment = textNumComment[0];
 	n_numComment++;
 	document.getElementById("commentedBox"+postId).style.display = "block";
 	numComment.innerHTML = n_numComment+" Bình luận";
@@ -399,4 +399,12 @@ function createNewFriendRequest(message){
 		+'onclick="refuseFriend('+message.content.data.sender.user_id+','+userId+','+message.content.data.non.non_id+'">Xóa</button>'
 		+'</div></li>'
 	ul.appendChild(li);
+}
+
+function newMessageNotify(){
+	var sound = document.getElementById("notifySound");
+	sound.play();
+	var countNewMessage = document.getElementById("countNewMessage");
+	var count = parseInt(countNewMessage.innerText)+1;
+	countNewMessage.innerHTML = count;
 }

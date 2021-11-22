@@ -67,10 +67,10 @@
 										th:text="${group.withUser.fullname}"></div>
 									<div class="container-left__item-info-sub">
 										<div class="container-left__item-info-last-mess"
-											th:text="${group.lastMessage}"></div>
+											th:text="${group.lastMessage}" th:id="'lastMessage'+${group.groupId}"></div>
 										.
 										<div class="container-left__item-info-time">
-											<span th:text="${group.timeText}"> </span>
+											<span th:text="${group.timeText}" th:id="'timeText'+${group.groupId}"> </span>
 										</div>
 									</div>
 								</div>
