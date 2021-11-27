@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,6 +27,7 @@ import com.SocialNetwork.Entity.Nontifications;
 import com.SocialNetwork.Entity.Posts;
 import com.SocialNetwork.Entity.User;
 import com.SocialNetwork.Repository.FriendRepository;
+import com.SocialNetwork.Repository.LoggedInCount;
 import com.SocialNetwork.Repository.ActionRepository;
 import com.SocialNetwork.Repository.NontificationRepository;
 import com.SocialNetwork.Repository.PostRepository;
@@ -52,11 +54,18 @@ public class HomeController {
 	private PostRepository postRepository;
 	@Autowired
 	private NontificationRepository nonRepository;
+	@Autowired
+	private LoggedInCount loggedIn;
 
 	@GetMapping("/user/index")
 	public ModelAndView homePage(Authentication authentication, HttpServletResponse response) {
 		Date date = new Date(System.currentTimeMillis());
 		Time time = new Time(System.currentTimeMillis());
+		com.SocialNetwork.Entity.LoggedInCount todayCount = new com.SocialNetwork.Entity.LoggedInCount();
+		todayCount.setTime(time);
+		todayCount.setDate(date);
+		todayCount.setEmail(authentication.getName());
+		loggedIn.save(todayCount);
 		CalculateTime calTime = new CalculateTime();
 		currentEmail = authentication.getName();
 		User user = repository.findByEmail(currentEmail);

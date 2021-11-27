@@ -1,5 +1,8 @@
 package com.SocialNetwork.Controller;
 
+import java.sql.Date;
+import java.sql.Time;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
@@ -32,6 +35,7 @@ public class RegisterController {
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public ModelAndView adduser(@RequestParam("fullName") String name, @RequestParam("email") String email,
 			@RequestParam("password") String password, @RequestParam("gender") String gender) {
+		Date date = new Date(System.currentTimeMillis());
 		User user = new User();
 		ModelAndView model = new ModelAndView();
 		PasswordEncoder passwordEncoder = new PasswordEncoder();
@@ -41,6 +45,7 @@ public class RegisterController {
 		user.setEmail(email);
 		user.setEnabled(0);
 		user.setLocked(0);
+		user.setDate(date);
 		user.setRole("user");
 		user.setProfile(null);
 		user.setProfile(profileImage.GetProfileImageBydefault(gender));

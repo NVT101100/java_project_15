@@ -1,0 +1,302 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+ <meta charset="utf-8">
+ <meta http-equiv="x-ua-compatible" content="ie=edge">
+<link th:href="@{https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900}" rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/admin/header.css}">
+<link rel="stylesheet" th:href="@{/css/admin/main.css}">
+<link rel="stylesheet" th:href="@{/css/admin/count-main.css}">
+<link rel="stylesheet" th:href="@{/css/admin/menu-left.css}">
+<link rel="stylesheet" th:href="@{/css/admin/footer.css}">
+<link rel="stylesheet" th:href="@{/fonts/icon/css/all.min.css}">
+<script type="text/javascript" th:src="@{https://www.gstatic.com/charts/loader.js}"></script>
+<script th:src="@{/js/jquery-1.12.4.min.js}"></script>
+</head>
+<body>
+<div class="wrap">
+	<div class="header">
+		<div class="header-left">
+			<p class="header-left-name">ADMIN TOOL</p>
+		</div>
+		<div class="header-right">
+			<div class="header-right-logout">
+				<div class="header-right-logout-icon">
+					<i class="fas fa-user"></i>
+				</div>
+				<div class="header-right-logout-username">
+					<p>admin</p>
+				</div>
+				<div class="header-right-logout-icon">
+					<i class="fas fa-caret-down"></i>
+				</div>
+			</div>
+			<div class="header-right-icon">
+				<i class="fas fa-message"></i>
+			</div>
+			<div class="header-right-icon">
+				<i class="fas fa-bell"></i>
+			</div>
+			<div class="header-right-icon" onclick="clicked()">
+				<i class="fas fa-house"></i>
+			</div>
+		</div>
+	</div>
+	<div class="menu-left">
+		<button class="menu-left-item active" onclick="window.location.href='countManager'">
+			<div class="menu-left-item-icon">
+				<i class="fas fa-chalkboard-user"></i>
+			</div>
+			<div class="menu-left-item-icon menu-left-item-name">
+				<p>Thống kê</p>
+			</div>
+		</button>
+		<button class="menu-left-item" onclick="window.location.href='userManager'">
+			<div class="menu-left-item-icon">
+				<i class="fas fa-list-check"></i>
+			</div>
+			<div class="menu-left-item-icon menu-left-item-name">
+				<p>Quản lý người dùng</p>
+			</div>
+		</button>
+		<button class="menu-left-item" onclick="window.location.href='postManager'">
+			<div class="menu-left-item-icon">
+				<i class="fas fa-envelopes-bulk"></i>
+			</div>
+			<div class="menu-left-item-icon menu-left-item-name">
+				<p>Quản lý bài viết</p>
+			</div>
+		</button>
+		<button class="menu-left-item" onclick="window.location.href='calendarManager.html'">
+			<div class="menu-left-item-icon">
+				<i class="fas fa-calendar-week"></i>
+			</div>
+			<div class="menu-left-item-icon menu-left-item-name">
+				<p>Lịch</p>
+			</div>
+		</button>
+	</div>
+	<div class="main-right">
+		<div class="main-right-header">
+			<div class="main-right-header-icon">
+				<i class="fas fa-house"></i>
+			</div>
+			<div class="main-right-header-home">
+				<p>Trang chủ</p>
+			</div>
+			<div class="main-right-header-sign">
+				<i class="fas fa-angle-right"></i>
+			</div>
+			<div class="main-right-header-tab">
+				<p>Thống kê</p>
+			</div>
+		</div>
+		<div class="main-right-contain">
+			<div class="main-right-contain-count"> 
+				<div class="main-right-contain-count-item">
+					<div class="main-right-contain-count-item-top">
+						<div class="main-right-contain-count-item-top-left" id="chart_user_count"></div>
+						<div class="main-right-contain-count-item-top-right">
+							<p class="main-right-contain-count-item-top-right-number" th:text="${countUser}"><p>
+							<div class="main-right-contain-count-item-top-right-icon">
+								<div class="main-right-contain-count-item-top-right-icon-i">
+								<i class="fas fa-circle-down"></i>
+								</div>
+								<p class="main-right-contain-count-item-top-right-icon-p">ĐĂNG KÍ</p>
+							</div>
+						</div>
+					</div>
+					<div class="main-right-contain-count-item-bottom">
+						<p>Số lượng tài khoản</p>
+					</div>
+				</div>
+				<div class="main-right-contain-count-item" style="background-color: #660099">
+					<div class="main-right-contain-count-item-top">
+						<div class="main-right-contain-count-item-top-left" id="chart_post_count"></div>
+						<div class="main-right-contain-count-item-top-right">
+							<p class="main-right-contain-count-item-top-right-number" th:text="${countLoggedIn}"><p>
+							<div class="main-right-contain-count-item-top-right-icon">
+								<div class="main-right-contain-count-item-top-right-icon-i">
+								<i class="fas fa-circle-up"></i>
+								</div>
+								<p class="main-right-contain-count-item-top-right-icon-p">ĐĂNG NHẬP</p>
+							</div>
+						</div>
+					</div>
+					<div class="main-right-contain-count-item-bottom">
+						<p>Số lượt truy cập</p>
+					</div>
+				</div>
+				<div class="main-right-contain-count-item" style="background-color: #33cc00">
+					<div class="main-right-contain-count-item-top">
+						<div class="main-right-contain-count-item-top-left" id="chart_log_count"></div>
+						<div class="main-right-contain-count-item-top-right">
+							<p class="main-right-contain-count-item-top-right-number" th:text="${countPost}"><p>
+							<div class="main-right-contain-count-item-top-right-icon">
+								<div class="main-right-contain-count-item-top-right-icon-i">
+								<i class="fas fa-circle-up"></i>
+								</div>
+								<p class="main-right-contain-count-item-top-right-icon-p">BÀI VIẾT</p>
+							</div>
+						</div>
+					</div>
+					<div class="main-right-contain-count-item-bottom">
+						<p>Số lượng bài đăng</p>
+					</div>
+				</div>
+			</div>
+			<div class="main-right-contain-graph">
+				<div class="main-right-contain-graph-canvas" id="chart_account"></div>
+				<div class="main-right-contain-graph-list">
+					<div class="main-right-contain-graph-list-top">
+						<div class="main-right-contain-graph-list-top-icon">
+							<i class="fas fa-window-maximize"></i>
+						</div>
+						<p class="main-right-contain-graph-list-top-name">
+							Tài khoản vừa đăng kí
+						</p>
+					</div>
+					<div class="main-right-contain-graph-list-bottom">
+						<table class="main-right-contain-graph-list-table">
+							<tr style="background-color: #888888;z-index: 2;">
+								<th class="main-right-contain-graph-list-th">Email</th>
+								<th class="main-right-contain-graph-list-th">Tên</th>
+								<th class="main-right-contain-graph-list-th">Giới tính</th>
+								<th class="main-right-contain-graph-list-th">Quyền</th>
+								<th class="main-right-contain-graph-list-th">Tình trạng</th>
+							</tr>
+							<tr th:each="user: ${newUser}">
+								<td class="main-right-contain-graph-list-th" th:text="${user.email}"></td>
+								<td class="main-right-contain-graph-list-th" th:text="${user.fullname}"></td>
+								<td class="main-right-contain-graph-list-th" th:text="${user.sex}"></td>
+								<td class="main-right-contain-graph-list-th" th:text="${user.role}"></td>
+								<td class="main-right-contain-graph-list-th" th:text="${user.enabled}?'Hoạt động':'Chưa kích hoạt'"></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="main-right-contain-graph">
+				<div class="main-right-contain-graph-canvas" id="chart_log"></div>
+				<div class="main-right-contain-graph-list">
+					<div class="main-right-contain-graph-list-top">
+						<div class="main-right-contain-graph-list-top-icon">
+							<i class="fas fa-window-maximize"></i>
+						</div>
+						<p class="main-right-contain-graph-list-top-name">
+							Bài viết mới nhất
+						</p>
+					</div>
+					<div class="main-right-contain-graph-list-bottom">
+						<table class="main-right-contain-graph-list-table">
+							<tr style="background-color: #888888;z-index: 2;">
+								<th class="main-right-contain-graph-list-th">ID</th>
+								<th class="main-right-contain-graph-list-th">Ngày</th>
+								<th class="main-right-contain-graph-list-th">Giờ</th>
+							</tr>
+							<tr th:each="post: ${newPost}">
+								<td class="main-right-contain-graph-list-th" th:text="${post.post_id}"></td>
+								<td class="main-right-contain-graph-list-th" th:text="${post.date}"></td>
+								<td class="main-right-contain-graph-list-th" th:text="${post.time}"></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="main-right-contain-graph">
+				<div class="main-right-contain-graph-canvas" id="chart_post"></div>
+				<div class="main-right-contain-graph-list">
+					<div class="main-right-contain-graph-list-top">
+						<div class="main-right-contain-graph-list-top-icon">
+							<i class="fas fa-window-maximize"></i>
+						</div>
+						<p class="main-right-contain-graph-list-top-name">
+							Đăng nhập gần đây
+						</p>
+					</div>
+					<div class="main-right-contain-graph-list-bottom">
+						<table class="main-right-contain-graph-list-table">
+							<tr style="background-color: #888888;z-index: 2;">
+								<th class="main-right-contain-graph-list-th">Email</th>
+								<th class="main-right-contain-graph-list-th">Ngày</th>
+								<th class="main-right-contain-graph-list-th">Giờ</th>
+							</tr>
+							<tr th:each="log: ${newLog}">
+								<td class="main-right-contain-graph-list-th" th:text="${log.email}"></td>
+								<td class="main-right-contain-graph-list-th" th:text="${log.date}"></td>
+								<td class="main-right-contain-graph-list-th" th:text="${log.time}"></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="main-right-contain-status">
+				<div class="main-right-contain-status-item">
+					<p class="main-right-contain-status-item-top">
+						Dung lượng đã sử dụng
+					</p>
+					<div class="main-right-contain-status-item-middle">
+						<div class="main-right-contain-status-item-middle-circle">
+							<div class="main-right-contain-status-item-middle-circle-fill" id="disk-space-fill"></div>
+							<h4 class="main-right-contain-status-item-middle-circle-score" id="disk-space-score" th:text="${diskSpacePercent}+'%'"></h4>
+						</div>
+					</div>
+					<p  class="main-right-contain-status-item-bottom" th:text="${diskFreeSpace}+' GB/'+${diskTotalSpace}+' GB'">
+					</p>
+				</div>
+				<div class="main-right-contain-status-item">
+					<p class="main-right-contain-status-item-top">
+						RAM
+					</p>
+					<div class="main-right-contain-status-item-middle">
+						<div class="main-right-contain-status-item-middle-circle">
+							<div class="main-right-contain-status-item-middle-circle-fill" id="ram-space-fill"></div>
+							<h4 class="main-right-contain-status-item-middle-circle-score" id="ram-space-score" th:text="${ramPercent}+'%'"></h4>
+						</div>
+					</div>
+					<p  class="main-right-contain-status-item-bottom" th:text="${ramUsed}+' MB/'+${totalRam}+' MB'">
+					</p>
+				</div>
+				<div class="main-right-contain-status-item">
+					<p class="main-right-contain-status-item-top">
+						CPU
+					</p>
+					<div class="main-right-contain-status-item-middle">
+						<div class="main-right-contain-status-item-middle-circle">
+							<div class="main-right-contain-status-item-middle-circle-fill" id="cpu-space-fill"></div>
+							<h4 class="main-right-contain-status-item-middle-circle-score" id="cpu-space-score">75%</h4>
+						</div>
+					</div>
+					<p  class="main-right-contain-status-item-bottom">
+						2.5GB/100GB
+					</p>
+				</div>
+				<div class="main-right-contain-status-item">
+					<p class="main-right-contain-status-item-top">
+						Băng Thông
+					</p>
+					<div class="main-right-contain-status-item-middle">
+						<div class="main-right-contain-status-item-middle-circle">
+							<div class="main-right-contain-status-item-middle-circle-fill" id="bandwidth-space-fill"></div>
+							<h4 class="main-right-contain-status-item-middle-circle-score" id="bandwidth-space-score">75%</h4>
+						</div>
+					</div>
+					<p  class="main-right-contain-status-item-bottom">
+						2.5GB/100GB
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="footer">
+		<div class="footer-icon">
+			<i class="fa-solid fa-copyright"></i>
+		</div>
+		<p class="footer-text">2021 Nhóm JAVA</p>
+	</div>
+</div>
+<script type="text/javascript" th:src="@{/js/admin.js}"></script>
+</body>
+</html>

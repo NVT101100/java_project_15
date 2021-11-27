@@ -1,25 +1,34 @@
 package com.SocialNetwork.Entity;
 
+import java.math.BigInteger;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ColumnResult;
+import javax.persistence.ConstructorResult;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 
+import com.SocialNetwork.Sheet.CountUserSheet;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "users", schema = "socialnetwork")
+@NamedNativeQuery(name="User.countUserByDate",query="select u.date as date,count(u.date) as number from users u group by u.date order by u.date asc",resultSetMapping="Mapping.CountUserSheet")
+@SqlResultSetMapping(name="Mapping.CountUserSheet",classes=@ConstructorResult(columns= {@ColumnResult(name="date"),@ColumnResult(name="number",type=Integer.class)},targetClass=CountUserSheet.class))
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,6 +39,7 @@ public class User {
 	private String email;
 	private int locked;
 	private int enabled;
+	private Date date;
 	private String role;
 	@Lob
 	public String profile;
@@ -175,6 +185,12 @@ public class User {
 	}
 	public void setFriends2(List<Friends> friend2) {
 		this.friend2 = friend2;
+	}
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
 	}
 	
 }

@@ -83,6 +83,7 @@ public class WebSocketServerEndPoint {
 	
 	@OnMessage
 	public void onMessage(Session session,String jsonString,@PathParam("userId") String userId) {
+		System.out.println(jsonString);
 		JSONObject jsonObject = JSON.parseObject(jsonString);
 		String toUser = jsonObject.getString("toUser");
 		String Page = jsonObject.getString("page");
@@ -91,8 +92,8 @@ public class WebSocketServerEndPoint {
 	}
 	
 	@OnClose
-	public void closeSession(Session session) {
-		
+	public void closeSession(Session session,@PathParam("userId") String userId,@PathParam("Page") String page) {
+		onlineSessions.remove(page+userId);
 	}
 	
 	/*@OnError

@@ -1,0 +1,82 @@
+.wrap {
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left:0;
+	bottom:0;
+	right: 0;
+	float: left;
+}
+
+body {
+	top: 0;
+	left:0;
+	bottom:0;
+	right: 0;
+	margin: 0;
+	padding: 0;
+	font-family: Roboto;
+	font-weight: bold;
+}
+
+/* Vùng bên phải menu */
+.main-right {
+	width: 85%;
+	height: 88%;
+	background-color: #333333;
+	margin-top: 3.4%;
+	margin-left: 15%;
+	overflow-y: scroll;
+}
+
+/*Thanh tên của tab*/
+.main-right-header {
+	width: 100%;
+	height: 6%;
+	display:flex;
+	background-color: #a9a9a9;
+	z-index: 10;
+	position: fixed;
+	
+}
+
+.main-right-header-icon {
+	width: 2%;
+	float: left;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.main-right-header-home {
+	width: 6%;
+	float: left;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-style: bold;
+}
+
+.main-right-header-sign {
+	width: 1%;
+	float: left;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.main-right-header-tab {
+	width: 15%;
+	float: left;
+	display: flex;
+	justify-content: left;
+	align-items: center;
+	font-style: bold;
+}
+/* Vùng chính */
+.main-right-contain {
+	width: 100%;
+	height: 95%;
+	float: left;
+	margin-top: 4.2%;
+}

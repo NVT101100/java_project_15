@@ -6,6 +6,8 @@ import java.sql.Time;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ColumnResult;
+import javax.persistence.ConstructorResult;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -14,14 +16,20 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 
+import com.SocialNetwork.Sheet.CountPostSheet;
+import com.SocialNetwork.Sheet.CountUserSheet;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="posts",schema = "socialnetwork")
+@NamedNativeQuery(name="Posts.countPostByDate",query="select p.date as date,count(p.date) as number from posts p group by p.date order by p.date asc",resultSetMapping="Mapping.CountPostSheet")
+@SqlResultSetMapping(name="Mapping.CountPostSheet",classes=@ConstructorResult(columns= {@ColumnResult(name="date"),@ColumnResult(name="number",type=Integer.class)},targetClass=CountPostSheet.class))
 public class Posts {
 	
 	@Id

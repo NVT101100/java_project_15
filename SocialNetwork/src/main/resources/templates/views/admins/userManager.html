@@ -1,0 +1,187 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<link
+	th:href="@{https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900}"
+	rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/admin/header.css}">
+<link rel="stylesheet" th:href="@{/css/admin/main.css}">
+<link rel="stylesheet" th:href="@{/css/admin/user-main.css}">
+<link rel="stylesheet" th:href="@{/css/admin/menu-left.css}">
+<link rel="stylesheet" th:href="@{/css/admin/footer.css}">
+<link rel="stylesheet" th:href="@{/fonts/icon/css/all.min.css}">
+<script type="text/javascript"
+	th:src="@{https://www.gstatic.com/charts/loader.js}"></script>
+<script th:src="@{/js/jquery-1.12.4.min.js}"></script>
+</head>
+<body>
+	<div class="wrap">
+		<div class="header">
+			<div class="header-left">
+				<p class="header-left-name">ADMIN TOOL</p>
+			</div>
+			<div class="header-right">
+				<div class="header-right-logout">
+					<div class="header-right-logout-icon">
+						<i class="fas fa-user"></i>
+					</div>
+					<div class="header-right-logout-username">
+						<p>admin</p>
+					</div>
+					<div class="header-right-logout-icon">
+						<i class="fas fa-caret-down"></i>
+					</div>
+				</div>
+				<div class="header-right-icon">
+					<i class="fas fa-message"></i>
+				</div>
+				<div class="header-right-icon">
+					<i class="fas fa-bell"></i>
+				</div>
+				<div class="header-right-icon">
+					<i class="fas fa-house"></i>
+				</div>
+			</div>
+		</div>
+		<div class="menu-left">
+			<button class="menu-left-item"
+				onclick="window.location.href='countManager'">
+				<div class="menu-left-item-icon">
+					<i class="fas fa-chalkboard-user"></i>
+				</div>
+				<div class="menu-left-item-icon menu-left-item-name">
+					<p>Thống kê</p>
+				</div>
+			</button>
+			<button class="menu-left-item active"
+				onclick="window.location.href='userManager'">
+				<div class="menu-left-item-icon">
+					<i class="fas fa-list-check"></i>
+				</div>
+				<div class="menu-left-item-icon menu-left-item-name">
+					<p>Quản lý người dùng</p>
+				</div>
+			</button>
+			<button class="menu-left-item"
+				onclick="window.location.href='postManager'">
+				<div class="menu-left-item-icon">
+					<i class="fas fa-envelopes-bulk"></i>
+				</div>
+				<div class="menu-left-item-icon menu-left-item-name">
+					<p>Quản lý bài viết</p>
+				</div>
+			</button>
+			<button class="menu-left-item"
+				onclick="window.location.href='calendarManager.html'">
+				<div class="menu-left-item-icon">
+					<i class="fas fa-calendar-week"></i>
+				</div>
+				<div class="menu-left-item-icon menu-left-item-name">
+					<p>Lịch</p>
+				</div>
+			</button>
+		</div>
+		<div class="main-right">
+			<div class="main-right-header">
+				<div class="main-right-header-icon">
+					<i class="fas fa-house"></i>
+				</div>
+				<div class="main-right-header-home">
+					<p>Trang chủ</p>
+				</div>
+				<div class="main-right-header-sign">
+					<i class="fas fa-angle-right"></i>
+				</div>
+				<div class="main-right-header-tab">
+					<p>Quản lý người dùng</p>
+				</div>
+			</div>
+			<div class="main-right-contain main-right-display">
+				<div class="main-right-contain-wrap">
+					<div class="main-right-contain-wrap" style="display: block;">
+						<div class="main-right-contain-wrap-top">
+							<p class="main-right-contain-wrap-top-title">Danh sách người
+								dùng</p>
+							<input placeholder=" Tìm kiếm" class="main-right-contain-wrap-top-search" oninput="searchUser()" id="userSearchText"></input>
+							<button class="main-right-contain-wrap-top-button">Tạo
+								tài khoản mới</button>
+						</div>
+						<div class="main-right-contain-wrap-table">
+							<table id="userTable">
+								<tr>
+									<th>ID</th>
+									<th>Email</th>
+									<th>Tên</th>
+									<th>Ảnh đại diện</th>
+									<th>Ảnh bìa</th>
+									<th>Trạng thái</th>
+									<th>Bài viết</th>
+									<th>Tin nhắn</th>
+									<th>Thiết lập</th>
+								</tr>
+								<tr th:each="user: ${users}">
+									<td th:text="${user.Id}"></td>
+									<td th:text="${user.email}"></td>
+									<td th:text="${user.fullname}"></td>
+									<td><img class="image"
+										th:src="@{'data:image/png;base64,'+${user.profile}}"></img></td>
+									<td><img class="image"
+										th:src="@{'data:image/png;base64,'+${user.cover}}"></img></td>
+									<td>
+										<button
+											th:onclick="|activeAccount('${user.Id}')|"
+											class="status" th:classappend="${user.status}?'isActive':''"
+											th:id="'buttonActive'+${user.Id}"
+											th:text="${user.status}?'Đã kích hoạt':'Bị khóa'"></button>
+									</td>
+									<td th:text="${user.postNumber}"></td>
+									<td th:text="${user.messageNumber}"></td>
+									<td>
+										<button class="button" th:id="'edit'+${user.Id}">
+											<i class="fas fa-pen-to-square" id></i>
+										</button>
+										<button class="button" th:id="'delete'+${user.Id}">
+											<i class="fas fa-trash-can"></i>
+										</button>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="main-right-contain-wrap-bottom">
+							<ul class="main-right-contain-wrap-bottom-pagination">
+								<li class="main-right-contain-wrap-bottom-pagination-item">
+									<a class="main-right-contain-wrap-bottom-pagination-item-a"
+									href="#">Trước</a>
+								</li>
+								<li class="main-right-contain-wrap-bottom-pagination-item">
+									<a class="main-right-contain-wrap-bottom-pagination-item-a"
+									href="#">1</a>
+								</li>
+								<li class="main-right-contain-wrap-bottom-pagination-item">
+									<a class="main-right-contain-wrap-bottom-pagination-item-a"
+									href="#">2</a>
+								</li>
+								<li class="main-right-contain-wrap-bottom-pagination-item">
+									<a class="main-right-contain-wrap-bottom-pagination-item-a"
+									href="#">Sau</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="footer">
+			<div class="footer-icon">
+				<i class="fa-solid fa-copyright"></i>
+			</div>
+			<p class="footer-text">2021 Nhóm JAVA</p>
+		</div>
+	</div>
+	<script type="text/javascript" th:src="@{/js/admin.js}"></script>
+</body>
+</html>
