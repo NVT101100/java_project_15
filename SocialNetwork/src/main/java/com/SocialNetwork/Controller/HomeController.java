@@ -142,6 +142,7 @@ public class HomeController {
 			modelAndView.addObject("posts", myPostWithLikeSheets);
 			modelAndView.addObject("nontifications", listNewRequest);
 			modelAndView.addObject("notifies", listLikeAndComment);
+			modelAndView.addObject("Role", user.getRole().equals("admin")?true:false);
 			return modelAndView;
 		} else {
 			return new ModelAndView("redirect:/invalid");

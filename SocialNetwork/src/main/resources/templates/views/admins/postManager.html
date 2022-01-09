@@ -45,7 +45,7 @@
 		</div>
 	</div>
 	<div class="menu-left">
-		<button class="menu-left-item" onclick="window.location.href='countManager.html'">
+		<button class="menu-left-item" onclick="window.location.href='countManager'">
 			<div class="menu-left-item-icon">
 				<i class="fas fa-chalkboard-user"></i>
 			</div>
@@ -98,10 +98,10 @@
 					<div class="main-right-contain-wrap" style="display: block;">
 						<div class="main-right-contain-wrap-top">
 							<p class="main-right-contain-wrap-top-title">Danh sách bài viết</p>
-							<input placeholder=" Tìm kiếm" class="main-right-contain-wrap-top-search"></input>
+							<input placeholder=" Tìm kiếm" class="main-right-contain-wrap-top-search" oninput="searchPost()" id="postSearchText"></input>
 						</div>
 						<div class="main-right-contain-wrap-table">
-							<table>
+							<table id="postTable">
 								<tr>
 									<th>ID</th>
 									<th>Người đăng</th>
@@ -112,7 +112,7 @@
 									<th>Lượt bình luận</th>
 									<th>Thiết lập</th>
 								</tr>
-								<tr th:each="post: ${posts}">
+								<tr th:each="post: ${posts}"  th:id="'tr'+${post.postId}">
 									<td th:text="${post.postId}"></td>
 									<td th:text="${post.user}"></td>
 									<td><img class="image"
@@ -125,7 +125,7 @@
 										<button class="button" th:id="'edit'+${post.postId}">
 											<i class="fas fa-pen-to-square" id></i>
 										</button>
-										<button class="button" th:id="'delete'+${post.postId}">
+										<button class="button" th:onclick="|deletePost('${post.postId}')|">
 											<i class="fas fa-trash-can"></i>
 										</button>
 									</td>

@@ -215,6 +215,8 @@ public class ProfileController {
 	}
 
 	public void createAvatarPost(String id, MultipartFile images) {
+		Date date = new Date(System.currentTimeMillis());
+		Time time = new Time(System.currentTimeMillis());
 		Posts changeAvatarPost = new Posts();
 		User user = repository.findById(Integer.valueOf(id)).get();
 		List<Posts> postList = user.getPosts();
@@ -227,12 +229,16 @@ public class ProfileController {
 		String statusText = user.getSex().equals("male") ? "anh ấy" : "cô ấy";
 		changeAvatarPost.setStatus(user.getFullname() + " vừa cập nhật ảnh đại diện của " + statusText);
 		changeAvatarPost.setUserPost(user);
+		changeAvatarPost.setDate(date);
+		changeAvatarPost.setTime(time);
 		postList.add(changeAvatarPost);
 		user.setPosts(postList);
 		repository.saveAndFlush(user);
 	}
 
 	public void createCoverPost(String id, MultipartFile images) {
+		Date date = new Date(System.currentTimeMillis());
+		Time time = new Time(System.currentTimeMillis());
 		Posts changeAvatarPost = new Posts();
 		User user = repository.findById(Integer.valueOf(id)).get();
 		List<Posts> postList = user.getPosts();
@@ -245,6 +251,8 @@ public class ProfileController {
 		String statusText = user.getSex().equals("male") ? "anh ấy" : "cô ấy";
 		changeAvatarPost.setStatus(user.getFullname() + " vừa cập nhật ảnh bìa của " + statusText);
 		changeAvatarPost.setUserPost(user);
+		changeAvatarPost.setDate(date);
+		changeAvatarPost.setTime(time);
 		postList.add(changeAvatarPost);
 		user.setPosts(postList);
 		repository.saveAndFlush(user);

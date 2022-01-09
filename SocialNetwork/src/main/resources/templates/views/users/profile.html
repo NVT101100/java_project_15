@@ -22,7 +22,7 @@
 
 <body>
 	<span th:object="${accessUser}" id = "userId" th:text="${accessUser.user_id}" style="display:none;"></span>
-	<div class="my-wall">
+	<div class="my-wall" onmousedown="closeSetting()">
 		<div class="my-wall__head">
 			<div class="my-wall__top">
 				<div class="my-wall__top-bg--big">

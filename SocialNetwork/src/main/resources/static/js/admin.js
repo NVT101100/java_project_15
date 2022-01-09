@@ -58,10 +58,10 @@
   	  		  legend: 'none',
   	  		  width: 70,
   	  		  colors: ['#eeeeee'],
-  	  		  backgroundColor: '#660099',
+  	  		  backgroundColor: '#33cc00',
   	  		  chartArea: {
   	  			backgroundColor: {
-  	  			fill: '#660099'
+  	  			fill: '#33cc00'
   	  			},
   	  			width: 70,
   	  			height: 70
@@ -80,10 +80,10 @@
   	  		  legend: 'none',
   	  		  width: 70,
   	  		  colors: ['#eeeeee'],
-  	  		  backgroundColor: '#33cc00',
+  	  		  backgroundColor: '#660099',
   	  		  chartArea: {
   	  			backgroundColor: {
-  	  			fill: '#33cc00'
+  	  			fill: '#660099'
   	  			},
   	  			width: 70,
   	  			height: 70
@@ -225,3 +225,48 @@ function searchUser(){
 		}
 	}
 } 
+function searchPost(){
+	var searchText = document.getElementById("postSearchText").value.toUpperCase();
+	var table = document.getElementById("postTable");
+	var tr = table.getElementsByTagName("tr");
+	if(searchText != null) {
+	for(let i=1;i<tr.length;i++){
+		var tdEmail = tr[i].getElementsByTagName("td")[1];
+		var tdName = tr[i].getElementsByTagName("td")[2];
+		if(tdEmail!=null && tdName != null) {
+			var tdText = tdEmail.innerText.toUpperCase();
+			if(tdText.indexOf(searchText) < 0) tr[i].style.display = "none";
+			else tr[i].style.display ="";
+			tdText = tdName.innerText.toUpperCase();
+			if(tdText.indexOf(searchText) < 0) tr[i].style.display = "none";
+			else tr[i].style.display ="";
+			tdText = tdName.innerText.toUpperCase();
+			if(tdText.indexOf(searchText) < 0) tr[i].style.display = "none";
+			else tr[i].style.display ="";
+		}
+	}
+	}
+	else {
+		for(let i=1;i<tr.length;i++) {
+			tr[i].style.display = "";
+		}
+	}
+} 
+function deletePost(postId) {
+	$.ajax({
+	   	 type : "POST",
+	   	 contentType : "application/json",
+	   	 url : "/SocialNetwork/admin/deletePost",
+	   	 data : postId,
+	   	 success : function(data) {
+	   		 console.log(data)
+	   			if(data != -1) {
+	   				var tr = document.getElementById("tr"+data);
+	   				tr.remove();
+	   			}
+	   	 },
+	   	 error : function(e) {
+	   		 alert("Đã xảy ra lỗi");
+	   	 }
+});
+}

@@ -7,5 +7,7 @@ public class ReturnCommentSheet {
 		this.userCommentSheet = userCommentSheet;
 		this.nonSheetCopy = nonSheetCopy;
 	}
-	
+	public ReturnCommentSheet() {
+		
+	}
 }

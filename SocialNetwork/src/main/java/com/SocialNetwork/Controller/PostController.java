@@ -180,6 +180,7 @@ public class PostController {
 			NonSheetCopy nonSheetCopy = new NonSheetCopy(nontifications.getText(),calculateTime.calculateTime(nontifications.getDate(), nontifications.getTime()) , sender);
 			returnCommentSheet = new ReturnCommentSheet(responeInfo, nonSheetCopy );
 		}
+		else returnCommentSheet = new ReturnCommentSheet(responeInfo, null);
 		userRepository.saveAndFlush(sender);
 		userRepository.saveAndFlush(receiver);
 		postRepository.saveAndFlush(post);

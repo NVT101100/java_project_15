@@ -48,6 +48,9 @@
 						</div>
 					</div>
 					<ul class="header-right">
+						<li class="header-right__item" th:if="${Role}">
+							<i class="fas fa-toolbox" onclick="window.location.href='/SocialNetwork/admin/countManager'"></i>
+						</li>
 						<li class="header-right__item"><img
 							th:src="@{'data:image/png;base64,'+${currentUser.profile}}"
 							alt="" class="header-profile__img avt"></li>

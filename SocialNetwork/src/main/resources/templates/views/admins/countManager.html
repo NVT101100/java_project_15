@@ -37,9 +37,9 @@
 				<i class="fas fa-message"></i>
 			</div>
 			<div class="header-right-icon">
-				<i class="fas fa-bell"></i>
+				<i class="fas fa-pager" onclick="location.href='/SocialNetwork/user/index'"></i>
 			</div>
-			<div class="header-right-icon" onclick="clicked()">
+			<div class="header-right-icon">
 				<i class="fas fa-house"></i>
 			</div>
 		</div>
@@ -67,14 +67,6 @@
 			</div>
 			<div class="menu-left-item-icon menu-left-item-name">
 				<p>Quản lý bài viết</p>
-			</div>
-		</button>
-		<button class="menu-left-item" onclick="window.location.href='calendarManager.html'">
-			<div class="menu-left-item-icon">
-				<i class="fas fa-calendar-week"></i>
-			</div>
-			<div class="menu-left-item-icon menu-left-item-name">
-				<p>Lịch</p>
 			</div>
 		</button>
 	</div>
@@ -114,7 +106,7 @@
 				</div>
 				<div class="main-right-contain-count-item" style="background-color: #660099">
 					<div class="main-right-contain-count-item-top">
-						<div class="main-right-contain-count-item-top-left" id="chart_post_count"></div>
+						<div class="main-right-contain-count-item-top-left" id="chart_log_count"></div>
 						<div class="main-right-contain-count-item-top-right">
 							<p class="main-right-contain-count-item-top-right-number" th:text="${countLoggedIn}"><p>
 							<div class="main-right-contain-count-item-top-right-icon">
@@ -131,7 +123,7 @@
 				</div>
 				<div class="main-right-contain-count-item" style="background-color: #33cc00">
 					<div class="main-right-contain-count-item-top">
-						<div class="main-right-contain-count-item-top-left" id="chart_log_count"></div>
+						<div class="main-right-contain-count-item-top-left" id="chart_post_count"></div>
 						<div class="main-right-contain-count-item-top-right">
 							<p class="main-right-contain-count-item-top-right-number" th:text="${countPost}"><p>
 							<div class="main-right-contain-count-item-top-right-icon">
@@ -179,7 +171,7 @@
 				</div>
 			</div>
 			<div class="main-right-contain-graph">
-				<div class="main-right-contain-graph-canvas" id="chart_log"></div>
+				<div class="main-right-contain-graph-canvas" id="chart_post"></div>
 				<div class="main-right-contain-graph-list">
 					<div class="main-right-contain-graph-list-top">
 						<div class="main-right-contain-graph-list-top-icon">
@@ -206,7 +198,7 @@
 				</div>
 			</div>
 			<div class="main-right-contain-graph">
-				<div class="main-right-contain-graph-canvas" id="chart_post"></div>
+				<div class="main-right-contain-graph-canvas" id="chart_log"></div>
 				<div class="main-right-contain-graph-list">
 					<div class="main-right-contain-graph-list-top">
 						<div class="main-right-contain-graph-list-top-icon">

@@ -1,3 +1,9 @@
+window.onload = function(){
+	var listMainContain = document.getElementsByClassName("container-main")
+	for(var i=1;i<listMainContain.length;i++) {
+		listMainContain[i].style.display = "none";
+	}
+}
 var userId = document.getElementById("userId").innerText;
 var sound = document.getElementById("myAudio"); 
 function getWebSocket() {
@@ -63,6 +69,7 @@ function getWebSocket() {
     function createNewMessage(data){
     	const newMessage = document.getElementById("lastMessage"+data.groupId)
     	const timeText = document.getElementById("timeText"+data.groupId)
+    	moveUpLeftItem(data.groupId);
     	newMessage.innerHTML = data.message;
     	timeText.innerHTML = "Vừa xong"
     	var ul = document.getElementById("containerBody"+data.groupId);
@@ -93,6 +100,19 @@ function getWebSocket() {
 									+'</div></div></li></ul>';
     	ul.appendChild(li);
     	li.scrollIntoView(true);
+    }
+    function moveUpLeftItem(groupId){
+    	var leftListItem = document.getElementsByClassName("container-left__item");
+    	const listItem = document.getElementById("groupList");
+    	for(var i=0;i<leftListItem.length;i++){
+    		if(leftListItem[i].id == "group"+groupId) {
+    			if(i!=0) { 
+    				var newItem = leftListItem[i];
+    				listItem.removeChild(leftListItem[i]);
+    				listItem.prepend(newItem);
+    			}
+    		}
+    	}  	
     }
     
     function likeMessage(messageId,withUserId,groupId,userId) {

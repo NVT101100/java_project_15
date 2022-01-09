@@ -52,10 +52,10 @@
 							</div>
 						</div>
 					</div>
-					<div class="container-left__body">
-						<ul class="container-left__list" th:each="group:${groups}">
-							<li class="container-left__item"
-								th:onclick="|displayMain('${group.groupId}')|">
+					<div class="container-left__body" id="groupList">
+						<ul class="container-left__list">
+							<li class="container-left__item" th:each="group:${groups}"
+								th:onclick="|displayMain('${group.groupId}')|" th:id="'group'+${group.groupId}">
 								<div class="container-left__item-avatar">
 									<img
 										th:src="@{'data:image/png;base64,'+${group.withUser.profile}}"

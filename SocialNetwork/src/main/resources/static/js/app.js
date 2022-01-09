@@ -13,7 +13,7 @@ websocket.onmessage = function(event) {
 	console.log(message)
 	if(message.content.type == "like") {
 		newLike(message.content.postId);
-		if(message.content.non != null && message.toUser == userId) createNontification(message);
+		if(message.content.non != "" && message.toUser == userId) createNontification(message);
 	}
 	if(message.content.type == "unlike") newUnLike(message.content.postId);
 	if(message.content.type == "comment"){
