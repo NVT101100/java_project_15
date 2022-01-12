@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="posts",schema = "socialnetwork")
-@NamedNativeQuery(name="Posts.countPostByDate",query="select p.date as date,count(p.date) as number from posts p group by p.date order by p.date asc",resultSetMapping="Mapping.CountPostSheet")
+@NamedNativeQuery(name="Posts.countPostByDate",query="select p.date as date,count(p.date) as number from posts p group by p.date order by p.date desc",resultSetMapping="Mapping.CountPostSheet")
 @SqlResultSetMapping(name="Mapping.CountPostSheet",classes=@ConstructorResult(columns= {@ColumnResult(name="date"),@ColumnResult(name="number",type=Integer.class)},targetClass=CountPostSheet.class))
 public class Posts {
 	

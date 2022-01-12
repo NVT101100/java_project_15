@@ -48,6 +48,7 @@ public class User {
 	
 	@OneToMany(mappedBy="userPost",fetch = FetchType.LAZY,cascade=CascadeType.ALL)
 	@JsonManagedReference
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private List<Posts> posts;
 	
 	@OneToMany(mappedBy="user2",fetch=FetchType.LAZY,cascade=CascadeType.ALL)

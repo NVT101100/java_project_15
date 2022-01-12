@@ -21,5 +21,8 @@ public class GroupSheet {
 		this.lastMessage = lastMessage;
 		this.timeText = timeText;
 	}
+	public GroupSheet() {
+		
+	}
 	
 }

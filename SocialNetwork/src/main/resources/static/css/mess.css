@@ -7,7 +7,6 @@
 .container-left {
 	height: 100vh;
     width: 360px;
-    overflow-y: hidden;
     border-right: 1px solid var(--rgba-black);
     flex-shrink: 0;
 }
@@ -34,6 +33,7 @@
 }
 
 .container-left__head-group-btn {
+	position: relative;
     margin-left: 2px;
     background: var(--bg-color);
     width: 36px;
@@ -603,4 +603,107 @@
 
 .container-main__bottom-send {
     display: none;
+}
+
+.modal{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.modal__body{
+    --growth-from: 0.7;
+    --growth-to: 1;
+    margin: auto;
+    position: relative;
+    animation: growth linear 0.1s;
+}
+.auth-phone{
+    width: 500px;
+    background-color: var(--primary-color);
+    border-radius: 5px;
+    overflow: hidden;
+    padding-bottom: 20px;
+}
+.auth-phone__container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+.auth-phone_avt{
+    width: 200px;
+    border-radius: 50%;
+}
+.auth-phone_name{
+    font-size: 18px;
+    color: #fff;
+    margin-top: 20px;
+    text-transform: uppercase;
+}
+.auth-phone_end{
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+.auth-phone_inner{
+    width: 50px;
+    height: 50px;
+    background-color: red;
+    border-radius: 50%;
+    position: relative;
+}
+.auth-phone_inner i {
+    font-size: 24px;
+    color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.auth-phone_footer{
+    display: flex;
+    justify-content: space-around;
+}
+.bg-green{
+    background-color: green;
+}
+
+.header-left__search-history {
+    display: none;
+    position: absolute;
+    width: 309px;
+    top: 100%;
+    left: 0;
+    background-color: var(--white-color);
+    box-shadow: 0 8px 8px rgba(0, 0, 0, 0.3);
+    list-style: none;
+    z-index: 99;
+}
+.header-left__search-history-item {
+    font-size: 1.4rem;
+    color: #8A8D91;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    animation: fadeIn ease-in 0.2s;
+    height: 60px;
+}
+.header-left__search-history-item:hover {
+    background-color: #ddd;
+    border-radius: 0 0 8px 8px;
+    padding: 10px auto;
+}
+.header-left__search-history-avt {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+}
+.header-left__search-history-item span {
+    margin-left: 8px;
+    color: var(--text-color);
+    font-size: 1.5rem;
+}
+.header-search-icon {
+    margin-left: auto;
+    font-size: 1.6rem;
 }

@@ -18,7 +18,7 @@ import com.SocialNetwork.Sheet.CountPostSheet;
 
 @Entity
 @Table(name="logged_in")
-@NamedNativeQuery(name="LoggedInCount.countLogByDate",query="select l.date as date,count(l.date) as number from logged_in l group by l.date order by l.date asc",resultSetMapping="Mapping.CountLogSheet")
+@NamedNativeQuery(name="LoggedInCount.countLogByDate",query="select l.date as date,count(l.date) as number from logged_in l group by l.date order by l.date desc",resultSetMapping="Mapping.CountLogSheet")
 @SqlResultSetMapping(name="Mapping.CountLogSheet",classes=@ConstructorResult(columns= {@ColumnResult(name="date"),@ColumnResult(name="number",type=Integer.class)},targetClass=CountLogInSheet.class))
 public class LoggedInCount {
 	@Id

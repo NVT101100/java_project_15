@@ -73,7 +73,47 @@
     padding: 0 10px;
     color: var(--text-color);
 }
-
+.header-left__search-history {
+    display: none;
+    position: absolute;
+    width: 100%;
+    top: 100%;
+    left: 0;
+    background-color: var(--white-color);
+    box-shadow: 0 8px 8px rgba(0, 0, 0, 0.3);
+    list-style: none;
+    border-radius: 0 0 8px 8px;
+    z-index: 4;
+    overflow-y: scroll;
+}
+.header-left__search-history-item {
+    font-size: 1.4rem;
+    color: #8A8D91;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    animation: fadeIn ease-in 0.2s;
+    height: 60px;
+}
+.header-left__search-history-item:hover {
+    background-color: #ddd;
+    border-radius: 0 0 8px 8px;
+    padding: 10px auto;
+}
+.header-left__search-history-avt {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+}
+.header-left__search-history-item span {
+    margin-left: 8px;
+    color: var(--text-color);
+    font-size: 1.5rem;
+}
+.header-search-icon {
+    margin-left: auto;
+    font-size: 1.6rem;
+}
 
 .header-right {
     display: flex;
@@ -641,47 +681,7 @@
 }
 
 
-.header-left__search-history {
-    display: none;
-    position: absolute;
-    width: 100%;
-    top: 100%;
-    left: 0;
-    background-color: var(--white-color);
-    box-shadow: 0 8px 8px rgba(0, 0, 0, 0.3);
-    list-style: none;
-    border-radius: 0 0 8px 8px;
-    z-index: 4;
-    overflow: hidden;
-}
-.header-left__search-history-item {
-    font-size: 1.4rem;
-    color: #8A8D91;
-    padding: 16px;
-    display: flex;
-    align-items: center;
-    animation: fadeIn ease-in 0.2s;
-    height: 60px;
-}
-.header-left__search-history-item:hover {
-    background-color: #ddd;
-    border-radius: 0 0 8px 8px;
-    padding: 10px auto;
-}
-.header-left__search-history-avt {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-}
-.header-left__search-history-item span {
-    margin-left: 8px;
-    color: var(--text-color);
-    font-size: 1.5rem;
-}
-.header-search-icon {
-    margin-left: auto;
-    font-size: 1.6rem;
-}
+
 
 .header-left__search-input:focus ~ .header-left__search-history {
     display: block;

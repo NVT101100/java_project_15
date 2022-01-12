@@ -13,6 +13,7 @@
 	rel="stylesheet">
 <link rel="stylesheet" th:href="@{/css/base.css}">
 <link rel="stylesheet" th:href="@{/css/mess.css}">
+
 <link rel="stylesheet"
 	th:href="@{https://pro.fontawesome.com/releases/v6.0.0-beta1/css/all.css}" />
 <script th:src="@{https://code.jquery.com/jquery-3.6.0.js}"></script>
@@ -27,8 +28,8 @@
 	<div class="app" th:object="${currentUser}">
 		<span th:text="${currentUser.user_id}" id="userId"
 			style="display: none;"></span>
-		<div class="app-grid">
-			<div class="container">
+		<div class="app-grid" style="z-index: 99;">
+			<div class="container" id="appContainer">
 				<div class="container-left">
 					<div class="container-left__head">
 						<div class="container-left__head-top">
@@ -38,7 +39,17 @@
 									<i class="far fa-ellipsis-h"></i>
 								</div>
 								<div class="container-left__head-group-btn">
-									<i class="fas fa-edit"></i>
+									<i class="fas fa-edit" onclick="toggleListNew()"></i>
+									<ul class="header-left__search-history" id="listSearch">
+										<li class="header-left__search-history-item"
+											th:each="friend: ${friends}"
+											th:id="'itemSearch'+${friend.Id}"
+											th:onclick="|createGroup('${friend.Id}')|">
+											<img
+											th:src="@{'data:image/png;base64,'+${friend.profile}}" alt=""
+											class="header-left__search-history-avt"> <span
+											th:text="${friend.fullName}"></span></li>
+									</ul>
 								</div>
 							</div>
 						</div>
@@ -52,10 +63,11 @@
 							</div>
 						</div>
 					</div>
-					<div class="container-left__body" id="groupList">
-						<ul class="container-left__list">
+					<div class="container-left__body">
+						<ul class="container-left__list" id="groupList">
 							<li class="container-left__item" th:each="group:${groups}"
-								th:onclick="|displayMain('${group.groupId}')|" th:id="'group'+${group.groupId}">
+								th:onclick="|displayMain('${group.groupId}')|"
+								th:id="'group'+${group.groupId}">
 								<div class="container-left__item-avatar">
 									<img
 										th:src="@{'data:image/png;base64,'+${group.withUser.profile}}"
@@ -67,10 +79,12 @@
 										th:text="${group.withUser.fullname}"></div>
 									<div class="container-left__item-info-sub">
 										<div class="container-left__item-info-last-mess"
-											th:text="${group.lastMessage}" th:id="'lastMessage'+${group.groupId}"></div>
+											th:text="${group.lastMessage}"
+											th:id="'lastMessage'+${group.groupId}"></div>
 										.
 										<div class="container-left__item-info-time">
-											<span th:text="${group.timeText}" th:id="'timeText'+${group.groupId}"> </span>
+											<span th:text="${group.timeText}"
+												th:id="'timeText'+${group.groupId}"> </span>
 										</div>
 									</div>
 								</div>
@@ -105,6 +119,12 @@
 							</div>
 						</div>
 						<div class="container-main__head-right">
+							<div class="container-main__head-right-btn more-info-btn">
+								<i class="fas fa-phone"></i>
+							</div>
+							<div class="container-main__head-right-btn more-info-btn">
+								<i class="fas fa-video"></i>
+							</div>
 							<div class="container-main__head-right-btn more-info-btn">
 								<i class="fas fa-info-circle"></i>
 							</div>
@@ -216,8 +236,42 @@
 
 
 		</div>
+		<div class="modal">
+			<div class="modal__body">
+				<!-- Phone form -->
+				<div class="auth-phone" style="display: none;">
+					<div class="auth-phone__container">
+						<div class="auth-phone__form">
+							<img src="assets/img/profile.jpg" alt="" class="auth-phone_avt">
+							<p class="auth-phone_name">Dương Nguyễn Mai Hưng</p>
+						</div>
+					</div>
+					<div class="auth-phone_end">
+						<div class="auth-phone_inner">
+							<i class="fas fa-phone-alt"></i>
+						</div>
+					</div>
+				</div>
+				<!-- Login form -->
+				<div class="auth-phone" style="display: none;">
+					<div class="auth-phone__container">
+						<div class="auth-phone__form">
+							<img src="assets/img/profile.jpg" alt="" class="auth-phone_avt">
+							<p class="auth-phone_name">Dương Nguyễn Mai Hưng</p>
+						</div>
+					</div>
+					<div class="auth-phone_footer">
+						<div class="auth-phone_inner bg-green">
+							<i class="fas fa-phone-alt"></i>
+						</div>
+						<div class="auth-phone_inner">
+							<i class="fas fa-tty"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-	<script th:src="@{/js/websocket.js}"></script>
 	<script th:src="@{/js/mess.js}"></script>
 </body>
 

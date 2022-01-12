@@ -86,8 +86,8 @@
 								th:text="${numFriend}+' người bạn'"></div>
 						</div>
 					</div>
-					<ul class="main-left__friends-list" th:each="friend: ${friends}">
-						<li class="main-left__friends-item">
+					<ul class="main-left__friends-list">
+						<li class="main-left__friends-item" th:each="friend: ${friends}">
 							<div class="main-left__friends-item-avatar">
 								<img th:src="@{'data:image/png;base64,'+${friend.image}}" alt=""
 									class="imgmain-left__friends-img">
