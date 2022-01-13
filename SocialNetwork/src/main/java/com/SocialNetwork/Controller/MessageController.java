@@ -29,6 +29,7 @@ import com.SocialNetwork.Sheet.GroupSheet;
 import com.SocialNetwork.Sheet.MessageSheet;
 import com.SocialNetwork.Sheet.NewMessSheet;
 import com.alibaba.fastjson.JSON;
+import com.google.api.client.util.Lists;
 
 @Controller
 public class MessageController {
@@ -49,7 +50,7 @@ public class MessageController {
 		groupChat.addAll(auth.getReceiveMessage());
 		groupChat.addAll(auth.getSendMessage());
 		List<GroupSheet> groupSheets = new ArrayList<>();
-		for (GroupChat g : groupChat) {
+		for (GroupChat g : com.google.common.collect.Lists.reverse(groupChat)) {
 			List<Message> messages = g.getMessages();
 			List<MessageSheet> messageSheets = new ArrayList<>();
 			MessageSheet lastMessage = new MessageSheet();

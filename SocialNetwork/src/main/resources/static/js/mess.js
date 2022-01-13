@@ -1,8 +1,6 @@
 window.onload = function(){
 	var listMainContain = document.getElementsByClassName("container-main")
-	for(var i=1;i<listMainContain.length;i++) {
-		listMainContain[i].style.display = "none";
-	}
+	listMainContain[0].style.display = "flex";
 	var listMessage = listMainContain[0].getElementsByClassName("container-main__item");
 	listMessage[listMessage.length - 1].scrollIntoView(true);
 }
@@ -21,14 +19,24 @@ function getWebSocket() {
         webSocket.onmessage = function (event) {
         	var message = JSON.parse(event.data);
         	console.log(message);
-            if(message.content.data.type == "chat") {
-            	createNewMessage(message.content.data);
-            	if(message.toUser == userId) playAudio();
-            }
-            if(message.content.data.type == "like") createLike(message.content.data);
-            if(message.content.data.type == "unlike") unLike(message.content.data);
-            if(message.content.data.type == "delete") removeMessage(message.content.data);
-            if(message.content.data.type == "creategroup") createGroupSuccess(message.content.data.data);
+        	if(message.content.data) {
+        		if(message.content.data.type == "chat") {
+        			createNewMessage(message.content.data);
+        			if(message.toUser == userId) playAudio();
+        		}
+        		if(message.content.data.type == "like") createLike(message.content.data);
+        		if(message.content.data.type == "unlike") unLike(message.content.data);
+        		if(message.content.data.type == "delete") removeMessage(message.content.data);
+        		if(message.content.data.type == "creategroup") createGroupSuccess(message.content.data.data);
+        	}
+        	else if(message.content.type == "call" && message.toUser == userId)  remoteCreateCall(message);
+            else if(message.content.type == "acceptcall" && message.toUser == userId) localCreateCall(message);
+            else if(message.content.type == "refusecall" && message.toUser == userId) noCreateCall(); 
+            else if(message.content.type == "cancelcall" && message.toUser == userId) remoteCancelCall(); 
+            else if(message.content.type == "offer" && message.toUser == userId) acceptOffer(message); 
+            else if(message.content.type == "answer" && message.toUser == userId) acceptAnswer(message);
+        	else if(message.content.candidate != null && message.toUser == userId) acceptCandidate(message);
+        	else if(message.content.type == "hangup" && message.toUser == userId) remoteHangUp();
         };
         webSocket.onclose = function (event) {
             console.log('WebSocket close connection.');
@@ -42,11 +50,11 @@ function getWebSocket() {
     function sendMsgToServer(data) {
         webSocket.send(data);
     }
-    function checkIfEnter(key,withUserId,groupId,userId){
+    function checkIfEnter(key,withUserId,groupId,userid){
     	if(key.keyCode == 13) {
     		var messageText = document.getElementById("messageText"+groupId).value;
     		document.getElementById("messageText"+groupId).value = "";
-    		var data = JSON.stringify({withUserId: withUserId, message: messageText,userId: userId,groupId: groupId,type: "chat",messsageId: ""});
+    		var data = JSON.stringify({withUserId: withUserId, message: messageText,userId: userid,groupId: groupId,type: "chat",messsageId: ""});
     		$.ajax({
    		   	 type : "POST",
    		   	 contentType : "application/json",
@@ -124,10 +132,10 @@ function getWebSocket() {
     	}  	
     }
     
-    function likeMessage(messageId,withUserId,groupId,userId) {
+    function likeMessage(messageId,withUserId,groupId,userid) {
     	var li = document.getElementById("containerMainItem"+messageId);
     	if(li.classList.value.includes("isReaction")) {
-    		var data = JSON.stringify({withUserId: withUserId, message: "",userId: userId,groupId: groupId,type: "unlike",messageId: messageId});
+    		var data = JSON.stringify({withUserId: withUserId, message: "",userId: userid,groupId: groupId,type: "unlike",messageId: messageId});
     		$.ajax({
       		   	 type : "POST",
       		   	 contentType : "application/json",
@@ -142,7 +150,7 @@ function getWebSocket() {
       		    });
     	}
     	else {
-    		var data = JSON.stringify({withUserId: withUserId, message: "",userId: userId,groupId: groupId,type: "like",messageId: messageId});
+    		var data = JSON.stringify({withUserId: withUserId, message: "",userId: userid,groupId: groupId,type: "like",messageId: messageId});
     		$.ajax({
       		   	 type : "POST",
       		   	 contentType : "application/json",
@@ -157,8 +165,8 @@ function getWebSocket() {
       		    });
     	}
     }
-    function deleteMessage(messageId,withUserId,groupId,userId){
-    	var data = JSON.stringify({withUserId: withUserId, message: "",userId: userId,groupId: groupId,type: "delete",messageId: messageId});
+    function deleteMessage(messageId,withUserId,groupId,userid){
+    	var data = JSON.stringify({withUserId: withUserId, message: "",userId: userid,groupId: groupId,type: "delete",messageId: messageId});
 		$.ajax({
   		   	 type : "POST",
   		   	 contentType : "application/json",
@@ -354,4 +362,202 @@ function createGroupSuccess(data) {
 	appContainer.appendChild(newMainContain);
 	newMainContain.style.display = "flex";
 	document.getElementById("listSearch").style.display = "none";
+}
+
+const localVideo = document.getElementById("localVideo")
+const remoteVideo = document.getElementById("remoteVideo")
+const acceptButton = document.getElementById("acceptButton")
+const cancelButton = document.getElementById("cancelButton")
+const hangUpButton = document.getElementById("hangUpButton")
+const callArea = document.getElementById("callArea");
+const chatArea = document.getElementById("chatArea");
+const offerOptions = {
+  offerToReceiveVideo: true,
+  OfferToReceiveAudio: true
+};
+const constraints = {
+	video: true,audio: true
+};
+
+let localStream;
+let localPeer;
+let remotePeer;
+let callTo;let callFrom;let groupid;let islocal;
+const ICE_config = {
+		iceServers: [{
+			   urls: [ "stun:stun.l.google.com:19302" ]
+			}, {
+			   username: "Sd2vpMxQkRdV-G_gj4gr04XdD4Q1e27m_CFsjaUTkU7q9MbP7SMtdf_vIPIZXHeTAAAAAGGWOTRuZ3V5ZW50aG9p",
+			   credential: "db57866c-4862-11ec-971e-0242ac120004",
+			   urls: [
+			       "turn:hk-turn1.xirsys.com:80?transport=udp",
+			       "turn:hk-turn1.xirsys.com:3478?transport=udp",
+			       "turn:hk-turn1.xirsys.com:80?transport=tcp",
+		/*	       "turn:hk-turn1.xirsys.com:3478?transport=tcp",
+			       "turns:hk-turn1.xirsys.com:443?transport=tcp",
+			       "turns:hk-turn1.xirsys.com:5349?transport=udp"*/
+			   ]
+			}
+			]
+}
+function videoCall(to,from,groupId) {
+	callTo = to;
+	callFrom = from;
+	groupid = groupId;
+	islocal = true;
+	var modalCall = document.getElementById("modalCallSender");
+	modalCall.style.display = "block";
+	var receiverProfile = document.getElementById("withUserProfileIn"+groupId).src;
+	document.getElementById("toUserName").innerHTML = document.getElementById("withUserNameIn"+groupId).innerText;
+	document.getElementById("toUserProfile").src = receiverProfile;
+	getLocalMedia();
+}
+
+function getLocalMedia(){
+	 navigator.mediaDevices.getUserMedia(constraints)
+	 .then(getLocalStream).catch()
+}
+function getLocalStream(mediaStream){
+	localStream = mediaStream;
+	if(islocal) sendMsgToServer(JSON.stringify({page: "messagePage",toUser: callTo,content: {type: "call",fromId: callFrom,groupId: groupid}}))
+	else {
+		localPeer = new RTCPeerConnection(ICE_config)
+		localPeer.addEventListener('icecandidate', handleConnection);
+		localPeer.addStream(localStream);
+		localVideo.srcObject = localStream;
+		localPeer.createOffer(offerOptions).then(createdOffer).catch();
+	}
+}
+
+function localCreateCall(data) {
+	callArea.style.display = "block";
+	chatArea.style.display = "none";
+	document.getElementById("modalCallSender").style.display = "none";
+	localPeer = new RTCPeerConnection(ICE_config)
+	localPeer.addEventListener('icecandidate', handleConnection);
+	localPeer.addStream(localStream);
+	localVideo.srcObject = localStream;
+	localPeer.createOffer(offerOptions).then(createdOffer).catch();
+}
+
+function remoteCreateCall(data) {
+	callTo = data.content.fromId;
+	callFrom = data.toUser;
+	groupid = data.content.groupId;
+	const modalCallReceiver = document.getElementById("modalCallReceiver")
+	modalCallReceiver.style.display = "block";
+	var senderProfile = document.getElementById("withUserProfileIn"+groupid).src;
+	document.getElementById("fromUserName").innerHTML = document.getElementById("withUserNameIn"+groupid).innerText;
+	document.getElementById("fromUserProfile").src = senderProfile;
+}
+
+function cancelCall(){
+	document.getElementById("modalCallSender").style.display = "none";
+	sendMsgToServer(JSON.stringify({page: "messagePage",toUser: callTo,content: {type: "cancelcall",fromId: callFrom,groupId: groupid}}));
+	reset();
+}
+function remoteCancelCall(){
+	document.getElementById("modalCallReceiver").style.display = "none";
+	reset();
+}
+
+function acceptCall(){
+	callArea.style.display = "block";
+	chatArea.style.display = "none";
+	document.getElementById("modalCallReceiver").style.display = "none";
+	islocal = false;
+	getLocalMedia();
+	sendMsgToServer(JSON.stringify({page: "messagePage",toUser: callTo,content: {type: "acceptcall",fromId: callFrom,groupId: groupid}}));
+}
+
+function refuseCall(){
+	sendMsgToServer(JSON.stringify({page: "messagePage",toUser: callTo,content: {type: "refusecall",fromId: callFrom,groupId: groupid}}));
+	remoteCancelCall();
+	reset()
+}
+
+function handleConnection(event){
+	const iceCandidate = event.candidate;
+	if(iceCandidate) {
+		sendMsgToServer(JSON.stringify({page: "messagePage",toUser: callTo,content: iceCandidate}));
+	}
+}
+
+function createdOffer(description){
+	localPeer.setLocalDescription(description);
+	sendMsgToServer(JSON.stringify({page: "messagePage",toUser: callTo,content: description}));
+}
+
+function acceptOffer(message){
+	remotePeer = new RTCPeerConnection(ICE_config)
+	remotePeer.addEventListener('icecandidate', handleConnection);
+	remotePeer.addEventListener('addstream', gotRemoteMediaStream);
+	remotePeer.setRemoteDescription(message.content);
+	remotePeer.createAnswer().then(createdAnswer).catch();
+}
+
+function createdAnswer(description){
+	remotePeer.setLocalDescription(description);
+	sendMsgToServer(JSON.stringify({page: "messagePage",toUser: callTo,content: description}));
+}
+
+function acceptAnswer(message){
+	localPeer.setRemoteDescription(message.content);
+}
+
+function acceptCandidate(message){
+	const newCandidate = new RTCIceCandidate(message.content);
+	if(remotePeer.localDescription) remotePeer.addIceCandidate(newCandidate);
+	console.log(remotePeer)
+}
+function gotRemoteMediaStream(event){
+	remoteVideo.srcObject = event.stream;
+}
+
+function noCreateCall(){
+	document.getElementById("modalCallSender").style.display = "none";
+	reset();
+}
+
+function stopCamera(){
+	var vidTrack = localStream.getVideoTracks();
+	vidTrack.forEach(function(track) {
+	    if(track.enabled) track.enabled = false;
+	    else track.enabled = true;
+	 });
+}
+function stopAudio(){
+	var vidTrack = localStream.getAudioTracks();
+	vidTrack.forEach(function(track) {
+	    if(track.enabled) track.enabled = false;
+	    else track.enabled = true;
+	 });
+}
+
+function hangUp(){
+	var Track = localStream.getTracks();
+	Track.forEach(function(track) {
+	    track.stop();
+	 });
+	sendMsgToServer(JSON.stringify({page: "messagePage",toUser: callTo,content: {type: "hangup"}}));
+	reset();
+	callArea.style.display = "none";
+	chatArea.style.display = "block";
+}
+function remoteHangUp() {
+	if(localStream) { 
+		var Track = localStream.getTracks();
+		Track.forEach(function(track) {
+			track.stop();
+		});
+	}
+	reset();
+	callArea.style.display = "none";
+	chatArea.style.display = "block";
+}
+function reset(){
+	localVideo.srcObject = null;
+	remoteVideo.srcObject = null;
+	localPeer = null;
+	remotePeer = null;callTo = null; callFrom = null; groupid = null; islocal = null;
 }

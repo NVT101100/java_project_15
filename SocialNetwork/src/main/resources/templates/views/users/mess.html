@@ -25,10 +25,14 @@
 	<audio id="myAudio">
 		<source th:src="@{/mp3/messenger_ios.mp3}" type="audio/mpeg">
 	</audio>
-	<div class="app" th:object="${currentUser}">
+	<div class="app" th:object="${currentUser}" id="chatArea">
 		<span th:text="${currentUser.user_id}" id="userId"
+			style="display: none;"></span> <img
+			th:src="@{'data:image/png;base64,'+${currentUser.profile}}"
+			style="display: none;" id="senderProfile"></img> <span
+			th:text="${currentUser.fullname}" id="userName"
 			style="display: none;"></span>
-		<div class="app-grid" style="z-index: 99;">
+		<div class="app-grid" style="z-index: 99;" >
 			<div class="container" id="appContainer">
 				<div class="container-left">
 					<div class="container-left__head">
@@ -44,8 +48,7 @@
 										<li class="header-left__search-history-item"
 											th:each="friend: ${friends}"
 											th:id="'itemSearch'+${friend.Id}"
-											th:onclick="|createGroup('${friend.Id}')|">
-											<img
+											th:onclick="|createGroup('${friend.Id}')|"><img
 											th:src="@{'data:image/png;base64,'+${friend.profile}}" alt=""
 											class="header-left__search-history-avt"> <span
 											th:text="${friend.fullName}"></span></li>
@@ -102,17 +105,18 @@
 				</div>
 
 				<div th:id="'mainContainer'+${group.groupId}" class="container-main"
-					style="display: flex;" th:each="group:${groups}">
+					style="display: none;" th:each="group:${groups}">
 					<div class="container-main__head">
 						<div class="container-main__head-left">
 							<div class="container-main__head-left-avt">
 								<img class="container-main__head-left-avt-img avt-mess"
 									th:src="@{'data:image/png;base64,'+${group.withUser.profile}}"
-									alt="">
+									alt="" th:id="'withUserProfileIn'+${group.groupId}">
 							</div>
 							<div class="container-main__head-left-info">
 								<div class="container-main__head-left-info__name name-mess"
-									th:text="${group.withUser.fullname}"></div>
+									th:text="${group.withUser.fullname}"
+									th:id="'withUserNameIn'+${group.groupId}"></div>
 								<div class="container-main__head-left-info-time online">
 									<span th:text="${group.timeText}"></span>
 								</div>
@@ -123,7 +127,8 @@
 								<i class="fas fa-phone"></i>
 							</div>
 							<div class="container-main__head-right-btn more-info-btn">
-								<i class="fas fa-video"></i>
+								<i class="fas fa-video"
+									th:onclick="|videoCall('${group.withUser.user_id}','${group.user.user_id}','${group.groupId}')|"></i>
 							</div>
 							<div class="container-main__head-right-btn more-info-btn">
 								<i class="fas fa-info-circle"></i>
@@ -239,39 +244,68 @@
 		<div class="modal">
 			<div class="modal__body">
 				<!-- Phone form -->
-				<div class="auth-phone" style="display: none;">
+				<div class="auth-phone" style="display: none;" id="modalCallSender">
 					<div class="auth-phone__container">
 						<div class="auth-phone__form">
-							<img src="assets/img/profile.jpg" alt="" class="auth-phone_avt">
-							<p class="auth-phone_name">Dương Nguyễn Mai Hưng</p>
+							<img src="" alt="" class="auth-phone_avt" id="toUserProfile">
+							<p class="auth-phone_name" id="toUserName"></p>
+							<span>Đang gọi ...</span>
 						</div>
 					</div>
 					<div class="auth-phone_end">
 						<div class="auth-phone_inner">
-							<i class="fas fa-phone-alt"></i>
+							<i class="fas fa-phone-alt" onclick="cancelCall()"></i>
 						</div>
 					</div>
 				</div>
 				<!-- Login form -->
-				<div class="auth-phone" style="display: none;">
+				<div class="auth-phone" style="display: none;"
+					id="modalCallReceiver">
 					<div class="auth-phone__container">
 						<div class="auth-phone__form">
-							<img src="assets/img/profile.jpg" alt="" class="auth-phone_avt">
-							<p class="auth-phone_name">Dương Nguyễn Mai Hưng</p>
+							<img src="" alt="" class="auth-phone_avt" id="fromUserProfile">
+							<p class="auth-phone_name" id="fromUserName"></p>
+							<span>Đang kết nối ...</span>
 						</div>
 					</div>
 					<div class="auth-phone_footer">
 						<div class="auth-phone_inner bg-green">
-							<i class="fas fa-phone-alt"></i>
+							<i class="fas fa-phone-alt" onclick="acceptCall()"></i>
 						</div>
 						<div class="auth-phone_inner">
-							<i class="fas fa-tty"></i>
+							<i class="fas fa-tty" onclick="refuseCall()"></i>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<div style="position: relative; display: none;" id="callArea">
+		<div style="position: relative;">
+			<video autoplay id="remoteVideo" style="object-fit: contain;margin: auto;">
+				<source src="" type="video/mp4">
+			</video>
+		</div>
+		<div style="position: absolute; top: 0; right: 0; width: 20%;">
+			<video style="width: 100%; height: 30%;" autoplay id="localVideo"
+				muted>
+				<source src="" type="video/mp4">
+			</video>
+		</div>
+		<div class="auth-phone_footer"
+			style="width: 50%; position: absolute; top: 90%; left: 50%; transform: translate(-50%, -50%);">
+			<div class="auth-phone_inner bg-green">
+				<i class="fas fa-phone-alt" onclick="stopCamera()"></i>
+			</div>
+			<div class="auth-phone_inner bg-green">
+				<i class="fas fa-phone-alt" onclick="stopAudio()"></i>
+			</div>
+			<div class="auth-phone_inner">
+				<i class="fas fa-tty" id="hangUpButton" onclick="hangUp()"></i>
+			</div>
+		</div>
+	</div>
+
 	<script th:src="@{/js/mess.js}"></script>
 </body>
 

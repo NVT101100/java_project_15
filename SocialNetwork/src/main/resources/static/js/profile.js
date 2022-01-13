@@ -1,5 +1,5 @@
 const accessUserId = document.getElementById("userId").innerText;
-const webSocket = new WebSocket('wss://'+window.location.hostname+':8443/SocialNetwork/user/WebSocket/profilePage/'+accessUserId)
+const webSocket = new WebSocket('wss://'+window.location.hostname+'/SocialNetwork/user/WebSocket/profilePage/'+accessUserId)
 function editProfileImage(userId){
 	 let input = document.createElement("input");
 	 var profileImage = document.getElementById("profileImage");

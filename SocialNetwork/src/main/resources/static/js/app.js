@@ -7,7 +7,7 @@ var listNotify = document.getElementById("listNotify");
 var settingLists = document.getElementsByClassName("newsfeed__info-setting-list")
 var filearray = [];
 const userId = document.getElementById("userId").innerText;
-const websocket = new WebSocket('wss://'+window.location.hostname+':8443/SocialNetwork/user/WebSocket/homePage/'+userId);
+const websocket = new WebSocket('wss://'+window.location.hostname+'/SocialNetwork/user/WebSocket/homePage/'+userId);
 websocket.onmessage = function(event) {
 	var message = JSON.parse(event.data)
 	console.log(message)
