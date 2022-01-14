@@ -58,7 +58,7 @@ public class MessageController {
 				String userSend[] = m.getFromto().split(" ");
 				Integer userSendId = Integer.valueOf(userSend[0]);
 				MessageSheet messageSheet = new MessageSheet(m.getMessage_id(), m.getMessage(), m.isHasSeen(),
-						m.isHasLiked(), userSendId == auth.getUser_id() ? true : false,
+						m.isHasLiked(), userSendId.equals(auth.getUser_id()) ? true : false,
 						calTime.calculateTime(m.getDate(), m.getTime()));
 				lastMessage = messageSheet;
 				messageSheets.add(messageSheet);
