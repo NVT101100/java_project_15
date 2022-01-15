@@ -1,6 +1,7 @@
 package com.SocialNetwork.Controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -37,7 +38,8 @@ public class WebSocketServerEndPoint {
 	private static Map<String, Session> onlineSessions = new ConcurrentHashMap<>();
 	
 	public void sendMessage(String message,String userId, String toUser,String Page,String type) {
-		try {
+		synchronized(onlineSessions){
+			try {
 			if(Page.equals("homePage")){
 				Session receiverSession = onlineSessions.get(Page+toUser);
 				if (receiverSession!= null) receiverSession.getBasicRemote().sendText(message);
@@ -73,6 +75,7 @@ public class WebSocketServerEndPoint {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		}
 	}
 	
 	@OnOpen
@@ -95,6 +98,7 @@ public class WebSocketServerEndPoint {
 	public void closeSession(Session session,@PathParam("userId") String userId,@PathParam("Page") String page) {
 		onlineSessions.remove(page+userId);
 	}
+	
 	
 	/*@OnError
 	public void errorSession(Session session,Throwable throwable) {

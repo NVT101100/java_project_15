@@ -385,7 +385,7 @@ let remotePeer;
 let callTo;let callFrom;let groupid;let islocal;
 const ICE_config = {
 		iceServers: [{
-			   urls: [ "stun:stun.l.google.com:19302" ]
+			 	urls: [ "stun:hk-turn1.xirsys.com" ]
 			}, {
 			   username: "Sd2vpMxQkRdV-G_gj4gr04XdD4Q1e27m_CFsjaUTkU7q9MbP7SMtdf_vIPIZXHeTAAAAAGGWOTRuZ3V5ZW50aG9p",
 			   credential: "db57866c-4862-11ec-971e-0242ac120004",
@@ -421,9 +421,9 @@ function getLocalStream(mediaStream){
 	localStream = mediaStream;
 	if(islocal) sendMsgToServer(JSON.stringify({page: "messagePage",toUser: callTo,content: {type: "call",fromId: callFrom,groupId: groupid}}))
 	else {
-		localPeer = new RTCPeerConnection(ICE_config)
-		localPeer.addEventListener('icecandidate', handleConnection);
+		localPeer = new RTCPeerConnection(ICE_config);
 		localPeer.addStream(localStream);
+		localPeer.addEventListener('icecandidate', handleConnection);
 		localVideo.srcObject = localStream;
 		localPeer.createOffer(offerOptions).then(createdOffer).catch();
 	}
@@ -434,7 +434,7 @@ function localCreateCall(data) {
 	chatArea.style.display = "none";
 	document.getElementById("modalCallSender").style.display = "none";
 	localPeer = new RTCPeerConnection(ICE_config)
-	localPeer.addEventListener('icecandidate', handleConnection);
+	localPeer.addEventListener('icecandidate',handleConnection);
 	localPeer.addStream(localStream);
 	localVideo.srcObject = localStream;
 	localPeer.createOffer(offerOptions).then(createdOffer).catch();
@@ -519,18 +519,34 @@ function noCreateCall(){
 	reset();
 }
 
-function stopCamera(){
+function stopCamera(elm){
 	var vidTrack = localStream.getVideoTracks();
 	vidTrack.forEach(function(track) {
-	    if(track.enabled) track.enabled = false;
-	    else track.enabled = true;
+	    if(track.enabled){
+	    	track.enabled = false;
+	    	elm.classList.remove("fa-video");
+	    	elm.classList.add("fa-video-slash");
+	    }
+	    else{
+	    	track.enabled = true;
+	    	elm.classList.remove("fa-video-slash");
+	    	elm.classList.add("fa-video");
+	    }
 	 });
 }
-function stopAudio(){
+function stopAudio(elm){
 	var vidTrack = localStream.getAudioTracks();
 	vidTrack.forEach(function(track) {
-	    if(track.enabled) track.enabled = false;
-	    else track.enabled = true;
+	    if(track.enabled){
+	    	track.enabled = false;
+	    	elm.classList.remove("fa-volume-high");
+	    	elm.classList.add("fa-volume-xmark");
+	    }
+	    else {
+	    	track.enabled = true;
+	    	elm.classList.remove("fa-volume-xmark");
+	    	elm.classList.add("fa-volume-high");
+	    }
 	 });
 }
 
