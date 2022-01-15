@@ -1,8 +1,23 @@
+let ICE_config;
 window.onload = function(){
 	var listMainContain = document.getElementsByClassName("container-main")
 	listMainContain[0].style.display = "flex";
 	var listMessage = listMainContain[0].getElementsByClassName("container-main__item");
 	listMessage[listMessage.length - 1].scrollIntoView(true);
+	let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function($evt){
+       if(xhr.readyState == 4 && xhr.status == 200){
+           let res = JSON.parse(xhr.responseText);
+           console.log("response: ",res);
+           const ICE_config = {
+        			iceServers: [{   urls: [ res.v.iceServers.urls[0] ]}, {   username: res.v.iceServers.username,  credential: res.v.iceServers.credential,   urls: [ res.v.iceServers.urls[1],res.v.iceServers.urls[2],res.v.iceServers.urls[3],res.v.iceServers.urls[4],res.v.iceServers.urls[5],res.v.iceServers.urls[6]]}]
+        	}
+       }
+    }
+    xhr.open("PUT", "https://global.xirsys.net/_turn/SocialNetwork", true);
+    xhr.setRequestHeader("Authorization", "Basic " + btoa("nguyenthoi:3368af98-479b-11ec-9f05-0242ac130003"));
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send( JSON.stringify({"format": "urls"}) );
 }
 function toggleListNew(){
 	var listCreate = document.getElementById("listSearch")
@@ -383,23 +398,9 @@ let localStream;
 let localPeer;
 let remotePeer;
 let callTo;let callFrom;let groupid;let islocal;
-const ICE_config = {
-		iceServers: [{
-			 	urls: [ "stun:hk-turn1.xirsys.com" ]
-			}, {
-			   username: "Sd2vpMxQkRdV-G_gj4gr04XdD4Q1e27m_CFsjaUTkU7q9MbP7SMtdf_vIPIZXHeTAAAAAGGWOTRuZ3V5ZW50aG9p",
-			   credential: "db57866c-4862-11ec-971e-0242ac120004",
-			   urls: [
-			       "turn:hk-turn1.xirsys.com:80?transport=udp",
-			       "turn:hk-turn1.xirsys.com:3478?transport=udp",
-			       "turn:hk-turn1.xirsys.com:80?transport=tcp",
-		/*	       "turn:hk-turn1.xirsys.com:3478?transport=tcp",
-			       "turns:hk-turn1.xirsys.com:443?transport=tcp",
-			       "turns:hk-turn1.xirsys.com:5349?transport=udp"*/
-			   ]
-			}
-			]
-}
+/*const ICE_config = {
+		iceServers: [{   urls: [ "stun:hk-turn1.xirsys.com" ]}, {   username: "ioeC61ks-6VrvsndFH2RRVWpgAORZlGOgRynWEqjekpVGe44cKbchE1BS6p-5WPrAAAAAGHi3QtuZ3V5ZW50aG9p",   credential: "312096ac-7611-11ec-afd3-0242ac120004",   urls: [       "turn:hk-turn1.xirsys.com:80?transport=udp",       "turn:hk-turn1.xirsys.com:3478?transport=udp",       "turn:hk-turn1.xirsys.com:80?transport=tcp",       "turn:hk-turn1.xirsys.com:3478?transport=tcp",       "turns:hk-turn1.xirsys.com:443?transport=tcp",       "turns:hk-turn1.xirsys.com:5349?transport=tcp"   ]}]
+}*/
 function videoCall(to,from,groupId) {
 	callTo = to;
 	callFrom = from;
@@ -421,11 +422,11 @@ function getLocalStream(mediaStream){
 	localStream = mediaStream;
 	if(islocal) sendMsgToServer(JSON.stringify({page: "messagePage",toUser: callTo,content: {type: "call",fromId: callFrom,groupId: groupid}}))
 	else {
-		localPeer = new RTCPeerConnection(ICE_config);
-		localPeer.addStream(localStream);
-		localPeer.addEventListener('icecandidate', handleConnection);
-		localVideo.srcObject = localStream;
-		localPeer.createOffer(offerOptions).then(createdOffer).catch();
+			localPeer = new RTCPeerConnection(ICE_config);
+			localPeer.addStream(localStream);
+			localPeer.addEventListener('icecandidate', handleConnection);
+			localVideo.srcObject = localStream;
+			localPeer.createOffer(offerOptions).then(createdOffer).catch();
 	}
 }
 
@@ -507,7 +508,7 @@ function acceptAnswer(message){
 
 function acceptCandidate(message){
 	const newCandidate = new RTCIceCandidate(message.content);
-	if(remotePeer.localDescription) remotePeer.addIceCandidate(newCandidate);
+	remotePeer.addIceCandidate(newCandidate);
 	console.log(remotePeer)
 }
 function gotRemoteMediaStream(event){
