@@ -512,6 +512,8 @@ function acceptCandidate(message){
 	console.log(remotePeer)
 }
 function gotRemoteMediaStream(event){
+	remoteVideo.height = window.innerHeight;
+	remoteVideo.width = window.innerWidth;
 	remoteVideo.srcObject = event.stream;
 }
 
